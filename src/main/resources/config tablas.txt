@@ -1,0 +1,43 @@
+create table recompensa(
+    recompensaID int NOT NULL AUTO_INCREMENT,
+    nombre varchar(255) not null,
+    costo int not null,
+    stock int not null default 0,
+    descripcion varchar(255),
+    primary key (recompensaID)
+);
+
+CREATE TABLE colaborador (
+  email varchar(255) NOT NULL,
+  nickname varchar(255) NOT NULL,
+  contrasena varchar(255) NOT NULL,
+  puntos int NOT NULL DEFAULT 0,
+  reputacion int NOT NULL DEFAULT 0,
+  PRIMARY KEY (email)
+);
+
+create table producto(
+    productoID int not null AUTO_INCREMENT ,
+    nombre varchar(255) not null,
+    marca varchar(255) not null,
+    cantidad int,
+    precio int not null,
+    fecha_actualizacion date,
+    primary key (productoID)
+);
+
+create table cadena(
+	cadenaID int not null AUTO_INCREMENT,
+    nombre varchar(255) not null,
+    primary key (cadenaID)
+);
+
+create table sucursal(
+	sucursalID int not null AUTO_INCREMENT,
+    cadenaID int not null,
+    ciudad varchar(255) not null,
+    calle varchar(255) not null,
+    numero int not null,
+    primary key (sucursalID),
+    foreign key (cadenaID) references cadena(cadenaID)
+);
