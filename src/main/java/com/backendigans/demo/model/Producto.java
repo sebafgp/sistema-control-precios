@@ -1,11 +1,10 @@
 package com.backendigans.demo.model;
 
-package com.example.demo.model;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Entity
@@ -34,6 +33,24 @@ public class Producto {
 	public int getId() {
 		return productoID;
 	}
-//other setters and getters
-    
+
+    public String getNombre(){
+        return nombre;
+    }
+
+    public String getMarca(){
+        return marca;
+    }    
+
+    public int getCantidad(){
+        return cantidad;
+    }
+
+    public int getPrecio(){
+        return precio;
+    }
+
+    public LocalDate getFecha_actualizacion(){
+        return fecha_actualizacion;
+    }
 }
