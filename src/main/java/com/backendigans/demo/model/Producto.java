@@ -53,4 +53,27 @@ public class Producto {
     public LocalDate getFecha_actualizacion(){
         return fecha_actualizacion;
     }
+
+	public int getProductoID() {
+		return this.productoID;
+	}
+
+	public void setProductoID(int productoID) {
+		this.productoID = productoID;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	public void setMarca(String marca) {
+		this.marca = marca;
+	}
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+	public void setPrecio(int precio) {
+		this.precio = precio;
+	}
+	public void setFecha_actualizacion(LocalDate fecha_actualizacion) {
+		this.fecha_actualizacion = fecha_actualizacion;
+	}
 }

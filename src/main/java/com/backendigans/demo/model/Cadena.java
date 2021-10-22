@@ -29,4 +29,12 @@ public class Cadena {
     public String getNombre() {
         return nombre;
     }
+
+    public void setCadenaID(int cadenaID) {
+        this.cadenaID = cadenaID;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 }

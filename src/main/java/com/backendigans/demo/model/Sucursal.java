@@ -30,22 +30,42 @@ public class Sucursal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     public int getSucursalID() {
-        return sucursalID;
+        return this.sucursalID;
     }
 
-    public int getCadenaID(){
-        return cadenaID;
+    public void setSucursalID(int sucursalID) {
+        this.sucursalID = sucursalID;
     }
 
-    public String getCiudad(){
-        return ciudad;
+    public int getCadenaID() {
+        return this.cadenaID;
     }
 
-    public String getCalle(){
-        return calle;
+    public void setCadenaID(int cadenaID) {
+        this.cadenaID = cadenaID;
     }
 
-    public int getNumero(){
-        return numero;
+    public String getCiudad() {
+        return this.ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
+
+    public String getCalle() {
+        return this.calle;
+    }
+
+    public void setCalle(String calle) {
+        this.calle = calle;
+    }
+
+    public int getNumero() {
+        return this.numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
     }
 }

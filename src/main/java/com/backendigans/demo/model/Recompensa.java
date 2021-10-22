@@ -28,24 +28,44 @@ public class Recompensa {
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    public int getRecompensaID(){
-        return recompensaID;
+    public int getRecompensaID() {
+        return this.recompensaID;
     }
 
-    public String getNombre(){
-        return nombre;
+    public void setRecompensaID(int recompensaID) {
+        this.recompensaID = recompensaID;
     }
 
-    public int getCosto(){
-        return costo;
+    public String getNombre() {
+        return this.nombre;
     }
 
-    public int getStock(){
-        return stock;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getDescripcion(){
-        return descripcion;
+    public int getCosto() {
+        return this.costo;
     }
+
+    public void setCosto(int costo) {
+        this.costo = costo;
+    }
+
+    public int getStock() {
+        return this.stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public String getDescripcion() {
+        return this.descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
 }

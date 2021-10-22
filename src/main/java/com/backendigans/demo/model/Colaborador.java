@@ -9,8 +9,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "colaborador")
 public class Colaborador {
-    private String email, contrasena, nickname;
-    private int puntos, reputacion;
+    private String email;
+    private String contrasena;
+    private String nickname;
+    private int puntos;
+    private int reputacion;
 
     public Colaborador(){
     }
@@ -24,21 +27,44 @@ public class Colaborador {
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
     public String getEmail() {
-        return email;
+        return this.email;
     }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getContrasena() {
-        return contrasena;
+        return this.contrasena;
     }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
     public String getNickname() {
-        return nickname;
+        return this.nickname;
     }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public int getPuntos() {
-        return puntos;
+        return this.puntos;
     }
+
+    public void setPuntos(int puntos) {
+        this.puntos = puntos;
+    }
+
     public int getReputacion() {
-        return reputacion;
+        return this.reputacion;
+    }
+
+    public void setReputacion(int reputacion) {
+        this.reputacion = reputacion;
     }
     
 }
