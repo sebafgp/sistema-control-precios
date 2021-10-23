@@ -1,7 +1,15 @@
 package com.backendigans.demo.service;
 
-//import com.backendigans.demo.model.Cadena;
+import java.util.List;
+import com.backendigans.demo.model.Cadena;
 
 public interface ServicioCadena {
-    public int busca(int num);
+
+    public List<Cadena> getCadenas();
+
+    public Cadena getCadena(int id);
+
+    public void guardarCadena(Cadena cadena);
+
+    public void borrarCadena(int id);
 }

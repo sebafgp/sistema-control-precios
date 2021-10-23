@@ -9,6 +9,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "colaborador")
 public class Colaborador {
+    private int ColaboradorID;
     private String email;
     private String contrasena;
     private String nickname;
@@ -18,7 +19,8 @@ public class Colaborador {
     public Colaborador(){
     }
 
-    public Colaborador (String email, String contrasena, String nickname, int puntos, int reputacion){
+    public Colaborador (int ColaboradorID, String email, String contrasena, String nickname, int puntos, int reputacion){
+        this.ColaboradorID = ColaboradorID;
         this.email = email;
         this.contrasena = contrasena;
         this.nickname = nickname;
@@ -27,6 +29,14 @@ public class Colaborador {
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int getColaboradorID(){
+        return this.ColaboradorID;
+    }
+
+    public void setColaboradorID(int idColaborador){
+        this.ColaboradorID = idColaborador;
+    }
+
     public String getEmail() {
         return this.email;
     }
