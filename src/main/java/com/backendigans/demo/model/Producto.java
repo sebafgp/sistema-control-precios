@@ -1,7 +1,9 @@
 package com.backendigans.demo.model;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,23 +19,29 @@ import java.util.Set;
 @Entity
 @Table(name = "producto")
 public class Producto {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int productoID;
+	@Column(name = "nombre")
 	private String nombre;
+	@Column(name = "marca")
 	private String marca;
+	@Column(name = "cantidad")
 	private int cantidad;
+	@Column(name = "precio")
 	private int precio;
+	@Column(name = "fecha_actualizacion")
 	private LocalDate fecha_actualizacion;
 
-	@ManyToMany (mappedBy = "productos")
-	private List <Sucursal> sucursales;
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "producto_colaborador",
+		joinColumns = {@JoinColumn(name = "productoID")},
+		inverseJoinColumns = {@JoinColumn(name = "colaboradorID")}
+	)
+	private Set<Colaborador> colaboradores = new HashSet<>();
 
-	@ManyToMany (cascade = {CascadeType.ALL})
-    @JoinTable(
-        name = "producto_colaborador",
-        joinColumns = {@JoinColumn(name = "productoID")},
-        inverseJoinColumns = {@JoinColumn(name = "colaboradorID")}
-    )
-    private List<Colaborador> colaboradores;
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productos")
+	private Set<Sucursal> sucursales = new HashSet<>();
 	
 	public Producto() {
 	}
@@ -46,8 +54,7 @@ public class Producto {
 		this.precio = precio;
 		this.fecha_actualizacion = fecha_actualizacion;
 	}
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	public int getId() {
 		return productoID;
 	}
@@ -95,19 +102,19 @@ public class Producto {
 		this.fecha_actualizacion = fecha_actualizacion;
 	}
 
-	public List<Sucursal> getSucursales() {
+	public Set<Sucursal> getSucursales() {
 		return this.sucursales;
 	}
 
-	public void setSucursales(List<Sucursal> sucursales) {
+	public void setSucursales(Set<Sucursal> sucursales) {
 		this.sucursales = sucursales;
 	}
 
-	public List<Colaborador> getColaboradores() {
+	public Set<Colaborador> getColaboradores() {
 		return this.colaboradores;
 	}
 
-	public void setColaboradores(List<Colaborador> colaboradores) {
+	public void setColaboradores(Set<Colaborador> colaboradores) {
 		this.colaboradores = colaboradores;
 	}
 

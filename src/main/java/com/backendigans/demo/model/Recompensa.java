@@ -1,8 +1,13 @@
 package com.backendigans.demo.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,14 +17,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "recompensa")
 public class Recompensa {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int recompensaID;
     private String nombre;
     private int costo;
     private int stock;
     private String descripcion;
 
-    @ManyToMany (mappedBy = "recompensas")
-	private List <Colaborador> colaboradores;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "recompensas")
+	private Set<Colaborador> colaboradores = new HashSet<>();
 
     public Recompensa(){
 
@@ -32,8 +39,7 @@ public class Recompensa {
         this.stock = stock;
         this.descripcion = descripcion;
     }
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     public int getRecompensaID() {
         return this.recompensaID;
     }
@@ -74,11 +80,11 @@ public class Recompensa {
         this.descripcion = descripcion;
     }
 
-    public List<Colaborador> getColaboradores() {
+    public Set<Colaborador> getColaboradores() {
         return this.colaboradores;
     }
 
-    public void setColaboradores(List<Colaborador> colaboradores) {
+    public void setColaboradores(Set<Colaborador> colaboradores) {
         this.colaboradores = colaboradores;
     }
 

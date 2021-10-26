@@ -1,10 +1,13 @@
 package com.backendigans.demo.model;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,23 +20,29 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "sucursal")
 public class Sucursal {
+    @Id
+    @Column(name = "sucursalID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int sucursalID;
+    @Column(name = "cadenaID")
     private int cadenaID;
+    @Column(name = "ciudad")
     private String ciudad;
+    @Column(name = "calle")
     private String calle;
+    @Column(name = "numero")
     private int numero;
 
-    @ManyToOne
-    @JoinColumn(name="cadenaID")
+    @ManyToOne(/*optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER*/)
+    //@JoinColumn(name = "cadenaID")
     private Cadena cadena;
 
-    @ManyToMany (cascade = {CascadeType.ALL})
-    @JoinTable(
-        name = "sucursal_producto",
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "sucursal_producto",
         joinColumns = {@JoinColumn(name = "sucursalID")},
         inverseJoinColumns = {@JoinColumn(name = "productoID")}
     )
-    private List<Producto> productos;
+    private Set<Producto> productos = new HashSet<>();
 
     public Sucursal(){
 
@@ -46,9 +55,7 @@ public class Sucursal {
         this.calle = calle;
         this.numero = numero;
     }
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-
+ 
     public int getSucursalID() {
         return this.sucursalID;
     }
@@ -97,11 +104,11 @@ public class Sucursal {
         this.cadena = cadena;
     }
 
-    public List<Producto> getProductos() {
+    public Set<Producto> getProductos() {
         return this.productos;
     }
 
-    public void setProductos(List<Producto> productos) {
+    public void setProductos(Set<Producto> productos) {
         this.productos = productos;
     }
 

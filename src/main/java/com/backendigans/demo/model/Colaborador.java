@@ -1,37 +1,48 @@
 package com.backendigans.demo.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.criteria.Join;
 import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "colaborador")
 public class Colaborador {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int colaboradorID;
+    @Column(name = "email")
     private String email;
+    @Column(name = "contrasena")
     private String contrasena;
+    @Column(name = "nickname")
     private String nickname;
+    @Column(name = "puntos")
     private int puntos;
+    @Column(name = "reputacion")
     private int reputacion;
 
-    @ManyToMany (mappedBy = "colaboradores")
-	private List <Producto> productos;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "colaboradores")
+	private Set <Producto> productos = new HashSet<>();
 
-    @ManyToMany (cascade = {CascadeType.ALL})
-    @JoinTable(
-        name = "colaborador_recompensa",
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "colaborador_recompensa",
         joinColumns = {@JoinColumn(name = "colaboradorID")},
         inverseJoinColumns = {@JoinColumn(name = "recompensaID")}
     )
-    private List<Recompensa> recompensas;
+    private Set<Recompensa> recompensas = new HashSet<>();
 
     public Colaborador(){
     }
@@ -44,8 +55,7 @@ public class Colaborador {
         this.puntos = puntos;
         this.reputacion = reputacion;
     }
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
     public int getColaboradorID(){
         return this.colaboradorID;
     }
@@ -94,19 +104,19 @@ public class Colaborador {
         this.reputacion = reputacion;
     }
 
-    public List<Producto> getProductos() {
+    public Set<Producto> getProductos() {
         return this.productos;
     }
 
-    public void setProductos(List<Producto> productos) {
+    public void setProductos(Set<Producto> productos) {
         this.productos = productos;
     }
 
-    public List<Recompensa> getRecompensas() {
+    public Set<Recompensa> getRecompensas() {
         return this.recompensas;
     }
 
-    public void setRecompensas(List<Recompensa> recompensas) {
+    public void setRecompensas(Set<Recompensa> recompensas) {
         this.recompensas = recompensas;
     }
     

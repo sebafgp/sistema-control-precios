@@ -1,7 +1,10 @@
 package com.backendigans.demo.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,11 +15,13 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "cadena")
 public class Cadena {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cadenaID;
     private String nombre;
 
     @OneToMany (mappedBy = "cadena")
-    private List<Sucursal> sucursales;
+    private Set<Sucursal> sucursales = new HashSet<>();
 
     public Cadena(){
     }
@@ -25,9 +30,7 @@ public class Cadena {
         this.cadenaID = cadenaID;
         this.nombre = nombre;
     }
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
+  
     public int getCadenaID() {
         return cadenaID;
     }
@@ -44,11 +47,11 @@ public class Cadena {
         this.nombre = nombre;
     }
 
-    public List<Sucursal> getSucursales(){
+    public Set<Sucursal> getSucursales(){
         return sucursales;
     }
 
-    public void setSucursales(List<Sucursal> sucursales){
+    public void setSucursales(Set<Sucursal> sucursales){
         this.sucursales = sucursales;
     }
 }
