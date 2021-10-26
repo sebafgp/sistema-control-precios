@@ -1,26 +1,43 @@
 package com.backendigans.demo.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "colaborador")
 public class Colaborador {
-    private int ColaboradorID;
+    private int colaboradorID;
     private String email;
     private String contrasena;
     private String nickname;
     private int puntos;
     private int reputacion;
 
+    @ManyToMany (mappedBy = "colaboradores")
+	private List <Producto> productos;
+
+    @ManyToMany (cascade = {CascadeType.ALL})
+    @JoinTable(
+        name = "colaborador_recompensa",
+        joinColumns = {@JoinColumn(name = "colaboradorID")},
+        inverseJoinColumns = {@JoinColumn(name = "recompensaID")}
+    )
+    private List<Recompensa> recompensas;
+
     public Colaborador(){
     }
 
-    public Colaborador (int ColaboradorID, String email, String contrasena, String nickname, int puntos, int reputacion){
-        this.ColaboradorID = ColaboradorID;
+    public Colaborador (int colaboradorID, String email, String contrasena, String nickname, int puntos, int reputacion){
+        this.colaboradorID = colaboradorID;
         this.email = email;
         this.contrasena = contrasena;
         this.nickname = nickname;
@@ -30,11 +47,11 @@ public class Colaborador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getColaboradorID(){
-        return this.ColaboradorID;
+        return this.colaboradorID;
     }
 
     public void setColaboradorID(int idColaborador){
-        this.ColaboradorID = idColaborador;
+        this.colaboradorID = idColaborador;
     }
 
     public String getEmail() {
@@ -75,6 +92,22 @@ public class Colaborador {
 
     public void setReputacion(int reputacion) {
         this.reputacion = reputacion;
+    }
+
+    public List<Producto> getProductos() {
+        return this.productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
+
+    public List<Recompensa> getRecompensas() {
+        return this.recompensas;
+    }
+
+    public void setRecompensas(List<Recompensa> recompensas) {
+        this.recompensas = recompensas;
     }
     
 }

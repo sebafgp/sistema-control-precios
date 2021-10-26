@@ -1,9 +1,17 @@
 package com.backendigans.demo.model;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -14,6 +22,18 @@ public class Sucursal {
     private String ciudad;
     private String calle;
     private int numero;
+
+    @ManyToOne
+    @JoinColumn(name="cadenaID")
+    private Cadena cadena;
+
+    @ManyToMany (cascade = {CascadeType.ALL})
+    @JoinTable(
+        name = "sucursal_producto",
+        joinColumns = {@JoinColumn(name = "sucursalID")},
+        inverseJoinColumns = {@JoinColumn(name = "productoID")}
+    )
+    private List<Producto> productos;
 
     public Sucursal(){
 
@@ -68,4 +88,21 @@ public class Sucursal {
     public void setNumero(int numero) {
         this.numero = numero;
     }
+
+    public Cadena getCadena() {
+        return this.cadena;
+    }
+
+    public void setCadena(Cadena cadena) {
+        this.cadena = cadena;
+    }
+
+    public List<Producto> getProductos() {
+        return this.productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
+
 }

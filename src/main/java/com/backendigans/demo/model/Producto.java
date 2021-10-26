@@ -1,11 +1,18 @@
 package com.backendigans.demo.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "producto")
@@ -16,6 +23,17 @@ public class Producto {
 	private int cantidad;
 	private int precio;
 	private LocalDate fecha_actualizacion;
+
+	@ManyToMany (mappedBy = "productos")
+	private List <Sucursal> sucursales;
+
+	@ManyToMany (cascade = {CascadeType.ALL})
+    @JoinTable(
+        name = "producto_colaborador",
+        joinColumns = {@JoinColumn(name = "productoID")},
+        inverseJoinColumns = {@JoinColumn(name = "colaboradorID")}
+    )
+    private List<Colaborador> colaboradores;
 	
 	public Producto() {
 	}
@@ -76,4 +94,21 @@ public class Producto {
 	public void setFecha_actualizacion(LocalDate fecha_actualizacion) {
 		this.fecha_actualizacion = fecha_actualizacion;
 	}
+
+	public List<Sucursal> getSucursales() {
+		return this.sucursales;
+	}
+
+	public void setSucursales(List<Sucursal> sucursales) {
+		this.sucursales = sucursales;
+	}
+
+	public List<Colaborador> getColaboradores() {
+		return this.colaboradores;
+	}
+
+	public void setColaboradores(List<Colaborador> colaboradores) {
+		this.colaboradores = colaboradores;
+	}
+
 }

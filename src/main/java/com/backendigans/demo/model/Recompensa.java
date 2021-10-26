@@ -1,9 +1,12 @@
 package com.backendigans.demo.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -14,6 +17,9 @@ public class Recompensa {
     private int costo;
     private int stock;
     private String descripcion;
+
+    @ManyToMany (mappedBy = "recompensas")
+	private List <Colaborador> colaboradores;
 
     public Recompensa(){
 
@@ -66,6 +72,14 @@ public class Recompensa {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public List<Colaborador> getColaboradores() {
+        return this.colaboradores;
+    }
+
+    public void setColaboradores(List<Colaborador> colaboradores) {
+        this.colaboradores = colaboradores;
     }
 
 }

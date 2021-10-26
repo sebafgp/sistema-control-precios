@@ -1,9 +1,12 @@
 package com.backendigans.demo.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -11,6 +14,9 @@ import javax.persistence.Table;
 public class Cadena {
     private int cadenaID;
     private String nombre;
+
+    @OneToMany (mappedBy = "cadena")
+    private List<Sucursal> sucursales;
 
     public Cadena(){
     }
@@ -36,5 +42,13 @@ public class Cadena {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public List<Sucursal> getSucursales(){
+        return sucursales;
+    }
+
+    public void setSucursales(List<Sucursal> sucursales){
+        this.sucursales = sucursales;
     }
 }
