@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.backendigans</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>Sistema_Control_De_Precios</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Sistema_Control_de_Precios</name>
-	<description>The Backendigans: Sistema de control de precios.</description>
+	<name>Sistema_Control_De_Precios</name>
+	<description>Rest api Sistema control de precios</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
