@@ -33,7 +33,7 @@ public class Sucursal {
     @Column(name = "numero")
     private int numero;
 
-    @ManyToOne(/*optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER*/)
+    @ManyToOne(cascade = CascadeType.ALL)
     //@JoinColumn(name = "cadenaID")
     private Cadena cadena;
 
