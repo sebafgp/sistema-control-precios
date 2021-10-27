@@ -35,6 +35,7 @@ public class ControladorRecompensa {
         }
     }
     @PostMapping("/")
+    @RequestMapping(produces = "application/json", method = RequestMethod.POST)
     public void add(@RequestBody Recompensa recompensa) {
         servicioRecompensa.saveRecompensa(recompensa);
     }

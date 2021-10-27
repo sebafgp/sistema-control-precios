@@ -35,6 +35,7 @@ public class ControladorCadena {
         }
     }
     @PostMapping("/")
+    @RequestMapping(produces = "application/json", method = RequestMethod.POST)
     public void add(@RequestBody Cadena cadena) {
         servicioCadena.saveCadena(cadena);
     }

@@ -35,6 +35,7 @@ public class ControladorProducto {
         }
     }
     @PostMapping("/")
+    @RequestMapping(produces = "application/json", method = RequestMethod.POST)
     public void add(@RequestBody Producto producto) {
         servicioProducto.saveProducto(producto);
     }

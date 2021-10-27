@@ -35,6 +35,7 @@ public class ControladorSucursal {
         }
     }
     @PostMapping("/")
+    @RequestMapping(produces = "application/json", method = RequestMethod.POST)
     public void add(@RequestBody Sucursal sucursal) {
         servicioSucursal.saveSucursal(sucursal);
     }

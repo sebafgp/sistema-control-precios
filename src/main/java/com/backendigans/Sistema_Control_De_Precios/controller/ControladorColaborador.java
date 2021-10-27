@@ -33,6 +33,7 @@ public class ControladorColaborador {
         }
     }
     @PostMapping("/")
+    @RequestMapping(produces = "application/json", method = RequestMethod.POST)
     public void add(@RequestBody Colaborador colaborador) {
         colaboradorService.saveColaborador(colaborador);
     }
