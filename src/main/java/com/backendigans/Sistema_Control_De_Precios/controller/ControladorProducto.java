@@ -40,6 +40,16 @@ public class ControladorProducto {
     public void add(@RequestBody Producto producto) {
         servicioProducto.saveProducto(producto);
     }
+    @PostMapping("/{email}/{contrasena}")
+    @RequestMapping(value = "{email}/{contrasena}", produces = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<Object> addProducto(@RequestBody Producto producto, @PathVariable String email, @PathVariable String contrasena){
+        Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
+        if(colaborador == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        servicioProducto.colaboradorGuardaProducto(producto, colaborador);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody Producto producto, @PathVariable Integer id) {
@@ -58,14 +68,5 @@ public class ControladorProducto {
         servicioProducto.deleteProducto(id);
     }
 
-    @PostMapping("/registrar_precio/{email}/{contrasena}")
-    @RequestMapping(produces = "application/json", method = RequestMethod.POST)
-    public ResponseEntity<Object> addProducto(@RequestBody Producto producto, @PathVariable String email, @PathVariable String contrasena){
-        Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
-        if(colaborador == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        servicioProducto.colaboradorGuardaProducto(producto);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    
 }
