@@ -1,6 +1,7 @@
 
 package com.backendigans.Sistema_Control_De_Precios.controller;
 
+import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
 import com.backendigans.Sistema_Control_De_Precios.model.Producto;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioProducto;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
@@ -55,5 +56,16 @@ public class ControladorProducto {
     public void delete(@PathVariable Integer id) {
 
         servicioProducto.deleteProducto(id);
+    }
+
+    @PostMapping("/registrar_precio/{email}/{contrasena}")
+    @RequestMapping(produces = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<Object> addProducto(@RequestBody Producto producto, @PathVariable String email, @PathVariable String contrasena){
+        Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
+        if(colaborador == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        servicioProducto.colaboradorGuardaProducto(producto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -33,4 +33,15 @@ public class ImplServicioColaborador implements ServicioColaborador {
     public void deleteColaborador(Integer colaboradorID) {
         colaboradorRepository.deleteById(colaboradorID);
     }
+
+    @Override
+    public Colaborador buscarColaboradorPorEmail(String email, String contrasena) {
+        List <Colaborador> colaboradores = listAllColaboradores();
+        for (int i = 0; i<colaboradores.size(); i++){
+            if (email.equals(colaboradores.get(i).getEmail()) && contrasena.equals(colaboradores.get(i).getContrasena())){
+                return colaboradores.get(i);
+            }
+        }
+        return null;
+    }
 }

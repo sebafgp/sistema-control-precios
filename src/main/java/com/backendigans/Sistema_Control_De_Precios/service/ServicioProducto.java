@@ -12,4 +12,6 @@ public interface ServicioProducto {
     public Producto getProducto(Integer productoID);
 
     public void deleteProducto(Integer productoID);
+
+    public void colaboradorGuardaProducto(Producto producto);
 }

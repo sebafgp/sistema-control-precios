@@ -33,4 +33,10 @@ public class ImplServicioProducto implements ServicioProducto {
     public void deleteProducto(Integer productoID) {
         productoRepository.deleteById(productoID);
     }
+
+    @Override
+    public void colaboradorGuardaProducto(Producto producto) {
+        
+        
+    }
 }
