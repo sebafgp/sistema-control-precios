@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.criteria.Join;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -27,6 +28,8 @@ import javax.persistence.JoinColumn;
 public class Colaborador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnoreProperties(ignoreUnknown = true, 
+                          value = {"productos", "recompensas"})
     private int colaboradorID;
     @Column(name = "email")
     private String email;
