@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -21,16 +22,17 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Entity
 @Table(name = "actualizacion")
+@IdClass(ActualizacionID.class)
 public class Actualizacion {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "colaborador", referencedColumnName = "colaboradorID")
+    @JoinColumn(name = "colaboradorID", referencedColumnName = "colaboradorID")
     private Colaborador colaborador;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "producto", referencedColumnName = "")
+    @JoinColumn(name = "productoID", referencedColumnName = "productoID")
     private Producto producto;
 
     private int precio;
