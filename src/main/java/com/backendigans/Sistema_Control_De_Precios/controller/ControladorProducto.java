@@ -62,7 +62,6 @@ public class ControladorProducto {
         String email = datos.email;
         String contrasena = datos.contrasena;
         Producto producto = datos.producto;
-
         try {
             Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
             servicioProducto.colaboradorGuardaProducto(producto, colaborador);

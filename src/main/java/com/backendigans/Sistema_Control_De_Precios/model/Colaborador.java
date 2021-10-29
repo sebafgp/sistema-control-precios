@@ -15,6 +15,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.criteria.Join;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.persistence.JoinColumn;
 
 @Entity
@@ -30,8 +35,12 @@ public class Colaborador {
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "puntos")
+    @Value("${some.key:0}")
+    @JsonIgnore
     private int puntos;
     @Column(name = "reputacion")
+    @Value("${some.key:0}")
+    @JsonIgnore
     private int reputacion;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "colaboradores")
