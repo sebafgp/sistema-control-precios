@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -19,6 +20,7 @@ import java.util.NoSuchElementException;
 public class ControladorProducto {
     @Autowired
     ServicioProducto servicioProducto;
+    @Autowired
     ServicioColaborador servicioColaborador;
 
     @GetMapping("")
@@ -40,15 +42,34 @@ public class ControladorProducto {
     public void add(@RequestBody Producto producto) {
         servicioProducto.saveProducto(producto);
     }
-    @PostMapping("/{email}/{contrasena}")
-    @RequestMapping(value = "{email}/{contrasena}", produces = "application/json", method = RequestMethod.POST)
-    public ResponseEntity<Object> addProducto(@RequestBody Producto producto, @PathVariable String email, @PathVariable String contrasena){
-        Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
-        if(colaborador == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    static public class RequestWrapper {
+        Producto producto;
+        String email;
+        String contrasena;
+
+		public RequestWrapper(Producto producto, String email, String contrasena) {
+            this.producto = producto;
+            this.email = email;
+            this.contrasena = contrasena;
+
+		}
+    }
+
+    @PostMapping("/colaborador")
+    @RequestMapping(value = "/colaborador", produces = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<Object> addProducto(@RequestBody RequestWrapper datos){
+        String email = datos.email;
+        String contrasena = datos.contrasena;
+        Producto producto = datos.producto;
+
+        try {
+            Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
+            servicioProducto.colaboradorGuardaProducto(producto, colaborador);
+            return new ResponseEntity<Object>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
-        servicioProducto.colaboradorGuardaProducto(producto, colaborador);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

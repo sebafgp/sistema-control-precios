@@ -118,4 +118,8 @@ public class Producto {
 		this.colaboradores = colaboradores;
 	}
 
+    public void addColaborador(Colaborador colaborador){
+        this.colaboradores.add(colaborador);
+    }
+
 }

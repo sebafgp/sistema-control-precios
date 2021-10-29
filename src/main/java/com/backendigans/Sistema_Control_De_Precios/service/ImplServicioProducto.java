@@ -40,12 +40,7 @@ public class ImplServicioProducto implements ServicioProducto {
 
     @Override
     public void colaboradorGuardaProducto(Producto producto, Colaborador colaborador) {
-        Set <Colaborador> colab = new HashSet<>();
-        colab.add(colaborador);
-        producto.setColaboradores(colab);
-
-        Set <Producto> prod = new HashSet<>();
-        prod.add(producto);
-        colaborador.setProductos(prod);
+        producto.addColaborador(colaborador);
+        saveProducto(producto);
     }
 }
