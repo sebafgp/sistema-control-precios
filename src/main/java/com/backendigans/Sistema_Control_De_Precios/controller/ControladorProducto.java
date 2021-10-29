@@ -1,6 +1,7 @@
 
 package com.backendigans.Sistema_Control_De_Precios.controller;
 
+import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
 import com.backendigans.Sistema_Control_De_Precios.model.Producto;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioProducto;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -18,6 +20,7 @@ import java.util.NoSuchElementException;
 public class ControladorProducto {
     @Autowired
     ServicioProducto servicioProducto;
+    @Autowired
     ServicioColaborador servicioColaborador;
 
     @GetMapping("")
@@ -40,6 +43,35 @@ public class ControladorProducto {
         servicioProducto.saveProducto(producto);
     }
 
+    static public class RequestWrapper {
+        Producto producto;
+        String email;
+        String contrasena;
+
+		public RequestWrapper(Producto producto, String email, String contrasena) {
+            this.producto = producto;
+            this.email = email;
+            this.contrasena = contrasena;
+
+		}
+    }
+
+    @PostMapping("/colaborador")
+    @RequestMapping(value = "/colaborador", produces = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<Object> addProducto(@RequestBody RequestWrapper datos){
+        String email = datos.email;
+        String contrasena = datos.contrasena;
+        Producto producto = datos.producto;
+
+        try {
+            Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
+            servicioProducto.colaboradorGuardaProducto(producto, colaborador);
+            return new ResponseEntity<Object>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody Producto producto, @PathVariable Integer id) {
         try {
@@ -56,4 +88,6 @@ public class ControladorProducto {
 
         servicioProducto.deleteProducto(id);
     }
+
+    
 }

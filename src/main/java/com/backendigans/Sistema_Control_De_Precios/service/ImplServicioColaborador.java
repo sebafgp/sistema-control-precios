@@ -33,4 +33,9 @@ public class ImplServicioColaborador implements ServicioColaborador {
     public void deleteColaborador(Integer colaboradorID) {
         colaboradorRepository.deleteById(colaboradorID);
     }
+
+    @Override
+    public Colaborador buscarColaboradorPorEmail(String email, String contrasena) {
+        return colaboradorRepository.findFirstByEmailAndContrasena(email, contrasena).get();
+    }
 }

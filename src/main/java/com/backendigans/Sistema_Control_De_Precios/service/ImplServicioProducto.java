@@ -1,5 +1,6 @@
 package com.backendigans.Sistema_Control_De_Precios.service;
 
+import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
 import com.backendigans.Sistema_Control_De_Precios.model.Producto;
 import com.backendigans.Sistema_Control_De_Precios.repository.RepositorioProducto;
 
@@ -7,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 @Service
 @Transactional
 public class ImplServicioProducto implements ServicioProducto {
@@ -32,5 +36,11 @@ public class ImplServicioProducto implements ServicioProducto {
     @Override
     public void deleteProducto(Integer productoID) {
         productoRepository.deleteById(productoID);
+    }
+
+    @Override
+    public void colaboradorGuardaProducto(Producto producto, Colaborador colaborador) {
+        producto.addColaborador(colaborador);
+        saveProducto(producto);
     }
 }
