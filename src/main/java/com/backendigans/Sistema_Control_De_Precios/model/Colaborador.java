@@ -13,8 +13,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.criteria.Join;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.persistence.JoinColumn;
 
 @Entity
@@ -22,6 +29,8 @@ import javax.persistence.JoinColumn;
 public class Colaborador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnoreProperties(ignoreUnknown = true, 
+                          value = {"productos", "recompensas"})
     private int colaboradorID;
     @Column(name = "email")
     private String email;
@@ -30,8 +39,12 @@ public class Colaborador {
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "puntos")
+    @Value("${some.key:0}")
+    @JsonIgnore
     private int puntos;
     @Column(name = "reputacion")
+    @Value("${some.key:0}")
+    @JsonIgnore
     private int reputacion;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "colaboradores")
@@ -43,6 +56,9 @@ public class Colaborador {
         inverseJoinColumns = {@JoinColumn(name = "recompensaID")}
     )
     private Set<Recompensa> recompensas = new HashSet<>();
+
+    @OneToMany(mappedBy = "colaborador")
+    private Set<Actualizacion> actualizacion = new HashSet<>();
 
     public Colaborador(){
     }
@@ -118,6 +134,13 @@ public class Colaborador {
 
     public void setRecompensas(Set<Recompensa> recompensas) {
         this.recompensas = recompensas;
+    }
+
+    public Set<Actualizacion> getActualizacion() {
+        return actualizacion;
+    }
+    public void setActualizacion(Set<Actualizacion> actualizacion) {
+        this.actualizacion = actualizacion;
     }
     
 }

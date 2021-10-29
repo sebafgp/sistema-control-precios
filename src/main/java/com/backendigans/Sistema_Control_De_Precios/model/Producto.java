@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -42,6 +43,10 @@ public class Producto {
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productos")
 	private Set<Sucursal> sucursales = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "producto")
+    private Set<Actualizacion> actualizacion = new HashSet<>();
 	
 	public Producto() {
 	}
@@ -121,5 +126,12 @@ public class Producto {
     public void addColaborador(Colaborador colaborador){
         this.colaboradores.add(colaborador);
     }
+
+	public Set<Actualizacion> getActualizacion() {
+		return actualizacion;
+	}
+	public void setActualizacion(Set<Actualizacion> actualizacion) {
+		this.actualizacion = actualizacion;
+	}
 
 }
