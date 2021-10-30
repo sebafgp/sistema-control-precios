@@ -1,7 +1,9 @@
 
 package com.backendigans.Sistema_Control_De_Precios.controller;
 
+import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
+import com.backendigans.Sistema_Control_De_Precios.service.ServicioActualizacion;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ import java.util.NoSuchElementException;
 public class ControladorColaborador {
     @Autowired
     ServicioColaborador colaboradorService;
+
+    @Autowired
+    ServicioActualizacion actualizacionService;
 
     @GetMapping("")
     public List<Colaborador> list() {
@@ -53,4 +58,16 @@ public class ControladorColaborador {
 
         colaboradorService.deleteColaborador(colaboradorID);
     }
+
+    @GetMapping("/valoraciones/{colaboradorID}")
+    public ResponseEntity<List<Actualizacion>> getValoraciones(@PathVariable Integer colaboradorID) {
+        try {
+            Colaborador colaborador = colaboradorService.getColaborador(colaboradorID);
+            List<Actualizacion> list = actualizacionService.encontrarPorColaborador(colaborador);
+            return new ResponseEntity<List<Actualizacion>>(list, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<List<Actualizacion>>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

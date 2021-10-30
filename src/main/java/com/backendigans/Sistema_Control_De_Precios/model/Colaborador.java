@@ -56,7 +56,7 @@ public class Colaborador {
         inverseJoinColumns = {@JoinColumn(name = "recompensaID")}
     )
     private Set<Recompensa> recompensas = new HashSet<>();
-
+    
     @OneToMany(mappedBy = "colaborador")
     private Set<Actualizacion> actualizacion = new HashSet<>();
 
@@ -135,12 +135,10 @@ public class Colaborador {
     public void setRecompensas(Set<Recompensa> recompensas) {
         this.recompensas = recompensas;
     }
-
     public Set<Actualizacion> getActualizacion() {
         return actualizacion;
     }
     public void setActualizacion(Set<Actualizacion> actualizacion) {
         this.actualizacion = actualizacion;
-    }
-    
+    }    
 }
