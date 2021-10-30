@@ -37,11 +37,6 @@ public class ControladorProducto {
             return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
         }
     }
-    @PostMapping("/")
-    @RequestMapping(produces = "application/json", method = RequestMethod.POST)
-    public void add(@RequestBody Producto producto) {
-        servicioProducto.saveProducto(producto);
-    }
 
     static public class RequestWrapper {
         Producto producto;
@@ -56,8 +51,8 @@ public class ControladorProducto {
 		}
     }
 
-    @PostMapping("/colaborador")
-    @RequestMapping(value = "/colaborador", produces = "application/json", method = RequestMethod.POST)
+    @PostMapping("/")
+    @RequestMapping(value = "/", produces = "application/json", method = RequestMethod.POST)
     public ResponseEntity<Object> addProducto(@RequestBody RequestWrapper datos){
         String email = datos.email;
         String contrasena = datos.contrasena;
