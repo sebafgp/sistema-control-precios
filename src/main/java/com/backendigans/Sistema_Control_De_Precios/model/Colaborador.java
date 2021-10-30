@@ -112,6 +112,13 @@ public class Colaborador {
         this.puntos = puntos;
     }
 
+    public void addPuntos(int puntosAdicionales){
+        if (puntosAdicionales < 0) {
+            return;
+        }
+        this.puntos = this.puntos + puntosAdicionales;
+    }
+
     public int getReputacion() {
         return this.reputacion;
     }

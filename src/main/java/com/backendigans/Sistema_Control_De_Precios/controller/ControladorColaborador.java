@@ -37,11 +37,13 @@ public class ControladorColaborador {
             return new ResponseEntity<Colaborador>(HttpStatus.NOT_FOUND);
         }
     }
+
     @PostMapping("/")
     @RequestMapping(produces = "application/json", method = RequestMethod.POST)
     public void add(@RequestBody Colaborador colaborador) {
         colaboradorService.saveColaborador(colaborador);
     }
+
     @PutMapping("/{colaboradorID}")
     public ResponseEntity<?> update(@RequestBody Colaborador colaborador, @PathVariable Integer colaboradorID) {
         try {

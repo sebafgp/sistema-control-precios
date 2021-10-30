@@ -52,13 +52,17 @@ public class ControladorProducto {
     }
 
     @PostMapping("/")
-    @RequestMapping(value = "/", produces = "application/json", method = RequestMethod.POST)
+    @RequestMapping(produces = "application/json", method = RequestMethod.POST)
     public ResponseEntity<Object> addProducto(@RequestBody RequestWrapper datos){
         String email = datos.email;
         String contrasena = datos.contrasena;
         Producto producto = datos.producto;
         try {
             Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
+            colaborador.addPuntos(1);
+            System.out.println(colaborador.getPuntos());
+
+            servicioColaborador.saveColaborador(colaborador);
             servicioProducto.colaboradorGuardaProducto(producto, colaborador);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
