@@ -39,7 +39,7 @@ public class Actualizacion {
 
     @Column(insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    Date fecha_actualizacion;
+    Date fechaActualizacion;
 
 
     @Value("${some.key:0}")
@@ -50,11 +50,11 @@ public class Actualizacion {
 
     }
 
-    public Actualizacion (Colaborador colaborador, Producto producto, int precio, Date fecha_actualizacion, int valoracion){
+    public Actualizacion (Colaborador colaborador, Producto producto, int precio, Date fechaActualizacion, int valoracion){
         this.colaborador = colaborador;
         this.producto = producto;
         this.precio = precio;
-        this.fecha_actualizacion = fecha_actualizacion;
+        this.fechaActualizacion = fechaActualizacion;
         this.valoracion = valoracion;
     }
 
@@ -82,5 +82,9 @@ public class Actualizacion {
     public void setValoracion(int valoracion) {
         this.valoracion = valoracion;
     }
+
+	public void addPuntos(int i) {
+        this.valoracion = this.valoracion + i;
+	}
 
 }

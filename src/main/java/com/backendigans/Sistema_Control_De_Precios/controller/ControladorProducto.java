@@ -1,9 +1,11 @@
 
 package com.backendigans.Sistema_Control_De_Precios.controller;
 
+import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
 import com.backendigans.Sistema_Control_De_Precios.model.Producto;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioProducto;
+import com.backendigans.Sistema_Control_De_Precios.service.ServicioActualizacion;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/productos")
@@ -22,6 +25,8 @@ public class ControladorProducto {
     ServicioProducto servicioProducto;
     @Autowired
     ServicioColaborador servicioColaborador;
+    @Autowired
+    ServicioActualizacion servicioActualizacion;
 
     @GetMapping("")
     public List<Producto> list() {
@@ -60,10 +65,50 @@ public class ControladorProducto {
         try {
             Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
             colaborador.addPuntos(1);
-            System.out.println(colaborador.getPuntos());
 
             servicioColaborador.saveColaborador(colaborador);
             servicioProducto.colaboradorGuardaProducto(producto, colaborador);
+            return new ResponseEntity<Object>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    static public class puntuarProductoWrapper {
+        String email;
+        String contrasena;
+        Boolean like;
+
+		public puntuarProductoWrapper(String email, String contrasena, Boolean like) {
+            this.email = email;
+            this.contrasena = contrasena;
+            this.like = like;
+		}
+    }
+
+    @PostMapping("/puntuar/{id}")
+    @RequestMapping(value = "/puntuar" , produces = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<Object> addProducto(@RequestBody puntuarProductoWrapper datos, @PathVariable Integer id){
+        String email = datos.email;
+        String contrasena = datos.contrasena;
+        Boolean like = datos.like;
+        try {
+            Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
+            colaborador.addPuntos(1);
+            servicioColaborador.saveColaborador(colaborador);
+
+            Producto producto = servicioProducto.getProducto(id);
+
+            Actualizacion actualizacion = servicioActualizacion.encontrarUltimaPorProducto(producto).get();
+
+            if (like){
+                actualizacion.addPuntos(1);
+            }else{
+                actualizacion.addPuntos(-1);
+            }
+
+            servicioActualizacion.saveActualizacion(actualizacion);
+
             return new ResponseEntity<Object>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
