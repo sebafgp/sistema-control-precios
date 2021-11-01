@@ -119,6 +119,11 @@ public class Producto {
 		return this.colaboradores;
 	}
 
+	public in getPrecio() {
+        return precio;
+	}
+
+
 	public void setColaboradores(Set<Colaborador> colaboradores) {
 		this.colaboradores = colaboradores;
 	}

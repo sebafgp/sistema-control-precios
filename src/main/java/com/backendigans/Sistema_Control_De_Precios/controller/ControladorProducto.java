@@ -69,6 +69,9 @@ public class ControladorProducto {
             Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
             colaborador.addPuntos(1);
 
+            Actualizacion actualizacion = new Actualizacion(colaborador, producto, producto.getPrecio());
+
+            servicioActualizacion.saveActualizacion(actualizacion);
             servicioColaborador.saveColaborador(colaborador);
             servicioProducto.colaboradorGuardaProducto(producto, colaborador);
             return new ResponseEntity<Object>(HttpStatus.OK);
