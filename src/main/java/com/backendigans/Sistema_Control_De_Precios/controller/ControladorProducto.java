@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -62,6 +62,9 @@ public class ControladorProducto {
         String email = datos.email;
         String contrasena = datos.contrasena;
         Producto producto = datos.producto;
+        producto.setFecha_actualizacion(LocalDateTime.now());
+
+
         try {
             Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
             colaborador.addPuntos(1);
@@ -112,6 +115,44 @@ public class ControladorProducto {
             return new ResponseEntity<Object>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
+    static public class RequestWrapperActualizar {
+        int precio;
+        String email;
+        String contrasena;
+        public RequestWrapperActualizar(int precio, String email, String contrasena) {
+            this.precio = precio;
+            this.email = email;
+            this.contrasena = contrasena;
+        }
+    }
+
+    @PutMapping("/actualizar/{id}")
+    public ResponseEntity<Object> actualizarPrecio(@RequestBody RequestWrapperActualizar datos, @PathVariable Integer id){
+        String email = datos.email;
+        String contrasena = datos.contrasena;
+        int precio = datos.precio;
+        try {
+            Producto producto = servicioProducto.getProducto(id);
+            producto.setPrecio(precio);
+            producto.setFecha_actualizacion(LocalDateTime.now());
+
+            Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
+            colaborador.addPuntos(1);
+            Actualizacion actualizacion = new Actualizacion(colaborador, producto, precio);
+
+
+            servicioProducto.saveProducto(producto);
+            servicioColaborador.saveColaborador(colaborador);
+            servicioActualizacion.saveActualizacion(actualizacion);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

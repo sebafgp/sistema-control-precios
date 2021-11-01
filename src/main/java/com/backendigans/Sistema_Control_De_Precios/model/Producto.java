@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +32,7 @@ public class Producto {
 	@Column(name = "precio")
 	private int precio;
 	@Column(name = "fecha_actualizacion")
-	private LocalDate fecha_actualizacion;
+	private LocalDateTime fecha_actualizacion;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "producto_colaborador",
@@ -51,7 +51,7 @@ public class Producto {
 	public Producto() {
 	}
 
-	public Producto(int productoID, String nombre, String marca, int cantidad, int precio , LocalDate fecha_actualizacion) {
+	public Producto(int productoID, String nombre, String marca, int cantidad, int precio , LocalDateTime fecha_actualizacion) {
 		this.productoID = productoID;
 		this.nombre = nombre;
 		this.marca = marca;
@@ -80,7 +80,7 @@ public class Producto {
         return precio;
     }
 
-    public LocalDate getFecha_actualizacion(){
+    public LocalDateTime getFecha_actualizacion(){
         return fecha_actualizacion;
     }
 
@@ -103,7 +103,7 @@ public class Producto {
 	public void setPrecio(int precio) {
 		this.precio = precio;
 	}
-	public void setFecha_actualizacion(LocalDate fecha_actualizacion) {
+	public void setFecha_actualizacion(LocalDateTime fecha_actualizacion) {
 		this.fecha_actualizacion = fecha_actualizacion;
 	}
 

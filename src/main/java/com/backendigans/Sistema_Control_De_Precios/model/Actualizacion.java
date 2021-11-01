@@ -1,6 +1,6 @@
 package com.backendigans.Sistema_Control_De_Precios.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,24 +22,23 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Entity
 @Table(name = "actualizacion")
-@IdClass(ActualizacionID.class)
 public class Actualizacion {
 
     @Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int actualizacionID;
+
     @ManyToOne
     @JoinColumn(name = "colaboradorID", referencedColumnName = "colaboradorID")
     private Colaborador colaborador;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "productoID", referencedColumnName = "productoID")
     private Producto producto;
 
     private int precio;
 
-    @Column(insertable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    Date fechaActualizacion;
+    private LocalDateTime fechaActualizacion;
 
 
     @Value("${some.key:0}")
@@ -50,13 +49,26 @@ public class Actualizacion {
 
     }
 
-    public Actualizacion (Colaborador colaborador, Producto producto, int precio, Date fechaActualizacion, int valoracion){
+    public Actualizacion (int actualizacionID, Colaborador colaborador, Producto producto, int precio, LocalDateTime fechaActualizacion, int valoracion){
+
+        this.actualizacionID = actualizacionID;
         this.colaborador = colaborador;
         this.producto = producto;
         this.precio = precio;
         this.fechaActualizacion = fechaActualizacion;
         this.valoracion = valoracion;
     }
+
+    public Actualizacion (Colaborador colaborador, Producto producto, int precio){
+
+        this.actualizacionID = 0;
+        this.colaborador = colaborador;
+        this.producto = producto;
+        this.precio = precio;
+        this.fechaActualizacion = LocalDateTime.now();
+        this.valoracion = 0;
+    }
+
 
     public Colaborador getColaborador() {
         return colaborador;
@@ -69,6 +81,9 @@ public class Actualizacion {
     }
     public int getValoracion() {
         return valoracion;
+    }
+    public LocalDateTime getFechaActualizacion() {
+        return fechaActualizacion;
     }
     public void setColaborador(Colaborador colaborador) {
         this.colaborador = colaborador;
