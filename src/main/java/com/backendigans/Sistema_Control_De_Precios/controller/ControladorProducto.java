@@ -93,7 +93,7 @@ public class ControladorProducto {
     }
 
     @PostMapping("/puntuar/{id}")
-    @RequestMapping(value = "/puntuar" , produces = "application/json", method = RequestMethod.POST)
+    @RequestMapping(value = "/puntuar/{id}" , produces = "application/json", method = RequestMethod.POST)
     public ResponseEntity<Object> addProducto(@RequestBody puntuarProductoWrapper datos, @PathVariable Integer id){
         String email = datos.email;
         String contrasena = datos.contrasena;
@@ -102,6 +102,7 @@ public class ControladorProducto {
             Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
             colaborador.addPuntos(1);
             servicioColaborador.saveColaborador(colaborador);
+
 
             Producto producto = servicioProducto.getProducto(id);
 
