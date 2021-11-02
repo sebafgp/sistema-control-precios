@@ -20,9 +20,14 @@ import javax.persistence.TemporalType;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "actualizacion")
+@JsonIgnoreProperties(ignoreUnknown = true, 
+                      value = {"colaborador"})
 public class Actualizacion {
+
 
     @Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

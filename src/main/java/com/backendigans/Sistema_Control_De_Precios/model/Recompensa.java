@@ -14,8 +14,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "recompensa")
+@JsonIgnoreProperties(ignoreUnknown = true, 
+                      value = {"colaboradores"})
 public class Recompensa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

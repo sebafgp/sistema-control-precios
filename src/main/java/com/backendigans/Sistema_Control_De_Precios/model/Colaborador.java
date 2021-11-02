@@ -26,11 +26,11 @@ import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "colaborador")
+@JsonIgnoreProperties(ignoreUnknown = true, 
+                      value = {"productos", "recompensas", "actualizacion"})
 public class Colaborador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnoreProperties(ignoreUnknown = true, 
-                          value = {"productos", "recompensas"})
     private int colaboradorID;
     @Column(name = "email")
     private String email;

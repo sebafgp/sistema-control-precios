@@ -17,8 +17,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "sucursal")
+@JsonIgnoreProperties(ignoreUnknown = true, 
+                      value = {"cadena"})
 public class Sucursal {
     @Id
     @Column(name = "sucursalID")

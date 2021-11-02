@@ -17,8 +17,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
 @Entity
 @Table(name = "producto")
+@JsonIgnoreProperties(ignoreUnknown = true, 
+                      value = {"colaboradores", "sucursales", "actualizacion"})
 public class Producto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
