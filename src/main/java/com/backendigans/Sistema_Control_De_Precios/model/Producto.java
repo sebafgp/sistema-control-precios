@@ -36,8 +36,8 @@ public class Producto {
 	private int cantidad;
 	@Column(name = "precio")
 	private int precio;
-	@Column(name = "fecha_actualizacion")
-	private LocalDateTime fecha_actualizacion;
+	@Column(name = "fechaActualizacion")
+	private LocalDateTime fechaActualizacion;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "producto_colaborador",
@@ -56,13 +56,13 @@ public class Producto {
 	public Producto() {
 	}
 
-	public Producto(int productoID, String nombre, String marca, int cantidad, int precio , LocalDateTime fecha_actualizacion) {
+	public Producto(int productoID, String nombre, String marca, int cantidad, int precio , LocalDateTime fechaActualizacion) {
 		this.productoID = productoID;
 		this.nombre = nombre;
 		this.marca = marca;
 		this.cantidad = cantidad;
 		this.precio = precio;
-		this.fecha_actualizacion = fecha_actualizacion;
+		this.fechaActualizacion = fechaActualizacion;
 	}
 
 	public int getId() {
@@ -85,8 +85,8 @@ public class Producto {
         return precio;
     }
 
-    public LocalDateTime getFecha_actualizacion(){
-        return fecha_actualizacion;
+    public LocalDateTime getFechaActualizacion(){
+        return fechaActualizacion;
     }
 
 	public int getProductoID() {
@@ -108,8 +108,8 @@ public class Producto {
 	public void setPrecio(int precio) {
 		this.precio = precio;
 	}
-	public void setFecha_actualizacion(LocalDateTime fecha_actualizacion) {
-		this.fecha_actualizacion = fecha_actualizacion;
+	public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
 	}
 
 	public Set<Sucursal> getSucursales() {

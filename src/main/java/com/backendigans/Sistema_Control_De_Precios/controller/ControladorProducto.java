@@ -62,7 +62,7 @@ public class ControladorProducto {
         String email = datos.email;
         String contrasena = datos.contrasena;
         Producto producto = datos.producto;
-        producto.setFecha_actualizacion(LocalDateTime.now());
+        producto.setFechaActualizacion(LocalDateTime.now());
 
 
         try {
@@ -143,7 +143,7 @@ public class ControladorProducto {
         try {
             Producto producto = servicioProducto.getProducto(id);
             producto.setPrecio(precio);
-            producto.setFecha_actualizacion(LocalDateTime.now());
+            producto.setFechaActualizacion(LocalDateTime.now());
 
             Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
             colaborador.addPuntos(1);
