@@ -51,7 +51,7 @@ public class Producto {
 
 
     @OneToMany(mappedBy = "producto")
-    private Set<Actualizacion> actualizacion = new HashSet<>();
+    private Set<Actualizacion> actualizaciones = new HashSet<>();
 	
 	public Producto() {
 	}
@@ -132,11 +132,11 @@ public class Producto {
         this.colaboradores.add(colaborador);
     }
 
-	public Set<Actualizacion> getActualizacion() {
-		return actualizacion;
+	public Set<Actualizacion> getActualizaciones() {
+		return actualizaciones;
 	}
-	public void setActualizacion(Set<Actualizacion> actualizacion) {
-		this.actualizacion = actualizacion;
+	public void setActualizaciones(Set<Actualizacion> actualizaciones) {
+		this.actualizaciones = actualizaciones;
 	}
 
 }
