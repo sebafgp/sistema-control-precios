@@ -186,4 +186,15 @@ public class ControladorProducto {
             return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/buscarPorPrecio/{precio}")
+    public ResponseEntity<List<Producto>> buscarPorPrecio(@PathVariable Integer precio){
+        try{
+            List<Producto> productos = servicioProducto.getProductoPorPrecio(precio);
+            return new ResponseEntity<List<Producto>>(productos, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<List<Producto>>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }

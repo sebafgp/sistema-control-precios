@@ -49,4 +49,11 @@ public class ImplServicioProducto implements ServicioProducto {
         // TODO Auto-generated method stub
         return productoRepository.findFirstByNombre(nombre);
     }
+
+    @Override
+    public List<Producto> getProductoPorPrecio(Integer precio){
+        List<Producto> productos;
+        productos = productoRepository.findByPrecioLessThanEqual(precio);
+        return productos;
+    }
 }
