@@ -45,9 +45,9 @@ public class ImplServicioProducto implements ServicioProducto {
     }
 
     @Override
-    public Producto getPrecioByNombre(String nombre) {
+    public List<Producto> getByNombre(String nombre) {
         // TODO Auto-generated method stub
-        return productoRepository.findFirstByNombre(nombre);
+        return productoRepository.findByNombre(nombre);
     }
 
     @Override

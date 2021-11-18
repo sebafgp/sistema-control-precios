@@ -177,15 +177,16 @@ public class ControladorProducto {
         servicioProducto.deleteProducto(id);
     }
 
-    @GetMapping("/precioPorNombre/{nombre}")
-    public ResponseEntity<Producto> getPrecioByNombre(@PathVariable String nombre) {
+    @GetMapping("/buscarPorNombre/{nombre}")
+    public ResponseEntity<List<Producto>> getByNombre(@PathVariable String nombre) {
         try {
-            Producto producto = servicioProducto.getPrecioByNombre(nombre);
-            return new ResponseEntity<Producto>(producto, HttpStatus.OK);
+            List<Producto> producto = servicioProducto.getByNombre(nombre);
+            return new ResponseEntity<List<Producto>>(producto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<Producto>>(HttpStatus.NOT_FOUND);
         }
     }
+    
     @GetMapping("/buscarPorPrecio/{precio}")
     public ResponseEntity<List<Producto>> buscarPorPrecio(@PathVariable Integer precio){
         try{

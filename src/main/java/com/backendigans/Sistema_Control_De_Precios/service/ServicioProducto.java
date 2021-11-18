@@ -17,7 +17,7 @@ public interface ServicioProducto {
 
     public void colaboradorGuardaProducto(Producto producto, Colaborador colaborador);
 
-    public Producto getPrecioByNombre(String nombre);
+    public List<Producto> getByNombre(String nombre);
 
     public List<Producto> getProductoPorPrecio(Integer procio);
 }
