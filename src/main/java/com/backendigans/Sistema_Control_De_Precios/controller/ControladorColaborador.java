@@ -72,4 +72,14 @@ public class ControladorColaborador {
         }
     }
 
+    @GetMapping("/topColaboradores")
+    public ResponseEntity<List<String>> getTopColaboradores() {
+        try {
+            List <String> colaboradores = colaboradorService.getTopColaboradores();
+           
+            return new ResponseEntity<List<String>>(colaboradores, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<List<String>>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

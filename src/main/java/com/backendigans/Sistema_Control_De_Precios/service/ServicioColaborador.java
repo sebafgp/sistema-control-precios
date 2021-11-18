@@ -13,4 +13,6 @@ public interface ServicioColaborador {
     public void deleteColaborador(Integer colaboradorID);
 
     public Colaborador buscarColaboradorPorEmail(String email, String contrasena);
+
+    public List<String> getTopColaboradores();
 }
