@@ -43,4 +43,10 @@ public class ImplServicioProducto implements ServicioProducto {
         producto.addColaborador(colaborador);
         saveProducto(producto);
     }
+
+    @Override
+    public Producto getPrecioByNombre(String nombre) {
+        // TODO Auto-generated method stub
+        return productoRepository.findFirstByNombre(nombre);
+    }
 }

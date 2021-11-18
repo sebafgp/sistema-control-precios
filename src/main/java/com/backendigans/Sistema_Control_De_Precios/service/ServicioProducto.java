@@ -16,4 +16,6 @@ public interface ServicioProducto {
     public void deleteProducto(Integer productoID);
 
     public void colaboradorGuardaProducto(Producto producto, Colaborador colaborador);
+
+    public Producto getPrecioByNombre(String nombre);
 }

@@ -177,5 +177,13 @@ public class ControladorProducto {
         servicioProducto.deleteProducto(id);
     }
 
-    
+    @GetMapping("/precioPorNombre/{nombre}")
+    public ResponseEntity<Producto> getPrecioByNombre(@PathVariable String nombre) {
+        try {
+            Producto producto = servicioProducto.getPrecioByNombre(nombre);
+            return new ResponseEntity<Producto>(producto, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
