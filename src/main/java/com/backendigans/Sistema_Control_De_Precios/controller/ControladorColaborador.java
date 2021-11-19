@@ -82,4 +82,15 @@ public class ControladorColaborador {
             return new ResponseEntity<List<String>>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/reputacionYActualizacionesDeColaboradorPorNickname/{nickname}")
+    public ResponseEntity<String> getReputacionYActualizacionesDeColaboradorPorNickname(@PathVariable String nickname) {
+        try {
+            String colaborador = colaboradorService.getColaboradorRepAct(nickname);
+           
+            return new ResponseEntity<String>(colaborador, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.backendigans.Sistema_Control_De_Precios.service;
 
+import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
 import com.backendigans.Sistema_Control_De_Precios.repository.RepositorioColaborador;
 
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import javassist.expr.NewArray;
 
 import javax.transaction.Transactional;
 
@@ -62,5 +65,34 @@ public class ImplServicioColaborador implements ServicioColaborador {
 
         return topTres;
 
+    }
+
+    @Override
+    public String getColaboradorRepAct(String nickname) {
+        Colaborador colaborador = colaboradorRepository.findFirstByNickname(nickname);
+        String found = "Nickname: " + colaborador.getNickname() + ", Reputación: " + colaborador.getReputacion();
+        if (colaborador.getActualizacion().size()>0){
+            List <Actualizacion> actualizaciones = new ArrayList<>(colaborador.getActualizacion());
+            found += ", Actualizaciones " + "(" + actualizaciones.size() + "): ";
+
+            found += 1 + ") Nombre producto: " + actualizaciones.get(0).getProducto().getNombre() + " "
+                + ", Marca: " + actualizaciones.get(0).getProducto().getMarca() + " "
+                + ", Cantidad: " + actualizaciones.get(0).getProducto().getCantidad() + " "
+                + ", Precio: " + actualizaciones.get(0).getProducto().getPrecio() + " "
+                + ", Fecha: " + actualizaciones.get(0).getFechaActualizacion().toString();
+
+            for (int i=1; i<actualizaciones.size(); i++) {
+                found += " - " + (i+1) + ") Nombre producto: " + actualizaciones.get(i).getProducto().getNombre() + " "
+                + ", Marca: " + actualizaciones.get(i).getProducto().getMarca() + " "
+                + ", Cantidad: " + actualizaciones.get(i).getProducto().getCantidad() + " "
+                + ", Precio: " + actualizaciones.get(i).getProducto().getPrecio() + " "
+                + ", Fecha: " + actualizaciones.get(i).getFechaActualizacion().toString();
+            }
+        }else{
+            found += ", no existen actualizaciones asociadas a este nickname. ";
+        }
+        
+
+        return found;
     }
 }
