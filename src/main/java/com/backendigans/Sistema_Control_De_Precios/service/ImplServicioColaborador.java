@@ -3,6 +3,10 @@ package com.backendigans.Sistema_Control_De_Precios.service;
 import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
 import com.backendigans.Sistema_Control_De_Precios.repository.RepositorioColaborador;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +19,7 @@ import javax.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 @Service
 @Transactional
 public class ImplServicioColaborador implements ServicioColaborador {
@@ -71,8 +76,8 @@ public class ImplServicioColaborador implements ServicioColaborador {
     public String getColaboradorRepAct(String nickname) {
         Colaborador colaborador = colaboradorRepository.findFirstByNickname(nickname);
         String found = "Nickname: " + colaborador.getNickname() + ", Reputación: " + colaborador.getReputacion();
-        if (colaborador.getActualizacion().size()>0){
-            List <Actualizacion> actualizaciones = new ArrayList<>(colaborador.getActualizacion());
+        if (colaborador.getActualizaciones().size()>0){
+            List <Actualizacion> actualizaciones = new ArrayList<>(colaborador.getActualizaciones());
             found += ", Actualizaciones " + "(" + actualizaciones.size() + "): ";
 
             found += 1 + ") Nombre producto: " + actualizaciones.get(0).getProducto().getNombre() + " "
@@ -91,8 +96,6 @@ public class ImplServicioColaborador implements ServicioColaborador {
         }else{
             found += ", no existen actualizaciones asociadas a este nickname. ";
         }
-        
-
         return found;
     }
 }

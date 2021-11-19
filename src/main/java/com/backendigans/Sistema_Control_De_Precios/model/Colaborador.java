@@ -27,7 +27,7 @@ import javax.persistence.JoinColumn;
 @Entity
 @Table(name = "colaborador")
 @JsonIgnoreProperties(ignoreUnknown = true, 
-                      value = {"productos", "recompensas", "actualizacion"})
+                      value = {"productos", "recompensas", "actualizaciones"})
 public class Colaborador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,7 +58,7 @@ public class Colaborador {
     private Set<Recompensa> recompensas = new HashSet<>();
     
     @OneToMany(mappedBy = "colaborador")
-    private Set<Actualizacion> actualizacion = new HashSet<>();
+    private Set<Actualizacion> actualizaciones = new HashSet<>();
 
     public Colaborador(){
     }
@@ -142,10 +142,10 @@ public class Colaborador {
     public void setRecompensas(Set<Recompensa> recompensas) {
         this.recompensas = recompensas;
     }
-    public Set<Actualizacion> getActualizacion() {
-        return actualizacion;
+    public Set<Actualizacion> getActualizaciones() {
+        return actualizaciones;
     }
-    public void setActualizacion(Set<Actualizacion> actualizacion) {
-        this.actualizacion = actualizacion;
+    public void setActualizacion(Set<Actualizacion> actualizaciones) {
+        this.actualizaciones = actualizaciones;
     }    
 }

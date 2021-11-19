@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "producto")
 @JsonIgnoreProperties(ignoreUnknown = true, 
-                      value = {"colaboradores", "sucursales", "actualizacion"})
+                      value = {"colaboradores", "sucursales", "actualizaciones"})
 public class Producto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

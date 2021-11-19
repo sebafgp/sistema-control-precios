@@ -67,13 +67,14 @@ public class ControladorProducto {
 
         try {
             Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
-            colaborador.addPuntos(1);
 
             Actualizacion actualizacion = new Actualizacion(colaborador, producto, producto.getPrecio());
 
-            servicioActualizacion.saveActualizacion(actualizacion);
+            
             servicioColaborador.saveColaborador(colaborador);
             servicioProducto.colaboradorGuardaProducto(producto, colaborador);
+            servicioActualizacion.saveActualizacion(actualizacion);
+            colaborador.addPuntos(1);
             return new ResponseEntity<Object>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
