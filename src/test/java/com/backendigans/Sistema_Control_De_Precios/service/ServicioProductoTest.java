@@ -79,6 +79,46 @@ public class ServicioProductoTest {
 
     }
 
+    @Test
+
+    void siBuscoPorNombreYExisteDevolverListaConProductos (){
+
+        // Arrange
+        List<Producto> resultado;
+        List<Producto> productos = cargarProductos();
+        String nombre = "Tallarines";
+
+        when(productoRepository.findByNombre(nombre)).thenReturn(productos);
+
+        // Act
+        resultado = productoService.getByNombre(nombre);
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(productos.size(), resultado.size());
+        assertEquals(productos.get(0).getNombre(), resultado.get(0).getNombre());
+
+    }
+
+    @Test
+
+    void siBuscoPorNombreYNoExisteDevolverListaVacia (){
+
+        // Arrange
+        List<Producto> resultado;
+        List<Producto> productos = new ArrayList <>();
+        String nombre = "Salsa";
+
+        when(productoRepository.findByNombre(nombre)).thenReturn(productos);
+
+        // Act
+        resultado = productoService.getByNombre(nombre);
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(0, resultado.size());
+
+    }
 
 
     /* Funciones Utilidad */

@@ -181,8 +181,12 @@ public class ControladorProducto {
     @GetMapping("/buscarPorNombre/{nombre}")
     public ResponseEntity<List<Producto>> getByNombre(@PathVariable String nombre) {
         try {
-            List<Producto> producto = servicioProducto.getByNombre(nombre);
-            return new ResponseEntity<List<Producto>>(producto, HttpStatus.OK);
+            List<Producto> productos = servicioProducto.getByNombre(nombre);
+            if(!productos.isEmpty()){
+                return new ResponseEntity<List<Producto>>(productos, HttpStatus.OK);
+            }else{
+                throw new NoSuchElementException();
+            }
         } catch (NoSuchElementException e) {
             return new ResponseEntity<List<Producto>>(HttpStatus.NOT_FOUND);
         }

@@ -85,7 +85,45 @@ public class ControladorProductoTest {
 
     }
 
+    @Test
+    void siBuscoPorNombreYExisteDevolverListaConProductos () throws Exception {
+        
+        // Given
+        List<Producto> productos = cargarProductos();
+        String nombre = "Tallarines";
 
+        given(productoService.getByNombre(nombre)).willReturn(productos);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get("/productos/buscarPorNombre/Tallarines")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+    }
+
+    @Test
+    void siBuscoPorNombreYNoExisteDevolverListaVacia () throws Exception {
+        
+        // Given
+        List<Producto> productos = new ArrayList<>();
+        String nombre = "Salsa";
+
+        given(productoService.getByNombre(nombre)).willReturn(productos);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get("/productos/buscarPorNombre/Salsa")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+
+    }
     /* Funciones Utilidad */
 
     private List<Producto> cargarProductos(){
