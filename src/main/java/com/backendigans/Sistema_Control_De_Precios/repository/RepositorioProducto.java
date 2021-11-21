@@ -10,4 +10,5 @@ public interface RepositorioProducto extends JpaRepository<Producto, Integer>{
     List<Producto> findByNombre(String nombre);
     List<Producto> findByPrecioLessThanEqual(int precio);
 
+
 }

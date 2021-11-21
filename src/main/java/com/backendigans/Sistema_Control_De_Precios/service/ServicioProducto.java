@@ -19,5 +19,5 @@ public interface ServicioProducto {
 
     public List<Producto> getByNombre(String nombre);
 
-    public List<Producto> getProductoPorPrecio(Integer procio);
+    public List<Producto> getProductoPorPrecio(Integer precio);
 }
