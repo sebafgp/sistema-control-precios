@@ -192,7 +192,11 @@ public class ControladorProducto {
     public ResponseEntity<List<Producto>> buscarPorPrecio(@PathVariable Integer precio){
         try{
             List<Producto> productos = servicioProducto.getProductoPorPrecio(precio);
-            return new ResponseEntity<List<Producto>>(productos, HttpStatus.OK);
+            if(!productos.isEmpty()){
+                return new ResponseEntity<List<Producto>>(productos, HttpStatus.OK);
+            }else{
+                throw new NoSuchElementException();
+            }
         } catch (NoSuchElementException e) {
             return new ResponseEntity<List<Producto>>(HttpStatus.NOT_FOUND);
         }
