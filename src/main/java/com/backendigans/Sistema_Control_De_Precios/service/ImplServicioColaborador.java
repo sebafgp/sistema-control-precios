@@ -73,29 +73,13 @@ public class ImplServicioColaborador implements ServicioColaborador {
     }
 
     @Override
-    public String getColaboradorRepAct(String nickname) {
+    public List<Object> getColaboradorRepAct(String nickname) {
         Colaborador colaborador = colaboradorRepository.findFirstByNickname(nickname);
-        String found = "Nickname: " + colaborador.getNickname() + ", Reputación: " + colaborador.getReputacion();
-        if (colaborador.getActualizaciones().size()>0){
-            List <Actualizacion> actualizaciones = new ArrayList<>(colaborador.getActualizaciones());
-            found += ", Actualizaciones " + "(" + actualizaciones.size() + "): ";
+        List<Object> ob = new ArrayList<>();
+        ob.add(colaborador.getNickname());
+        ob.add(colaborador.getReputacion());
+        ob.add(colaborador.getActualizaciones());
 
-            found += 1 + ") Nombre producto: " + actualizaciones.get(0).getProducto().getNombre() + " "
-                + ", Marca: " + actualizaciones.get(0).getProducto().getMarca() + " "
-                + ", Cantidad: " + actualizaciones.get(0).getProducto().getCantidad() + " "
-                + ", Precio: " + actualizaciones.get(0).getProducto().getPrecio() + " "
-                + ", Fecha: " + actualizaciones.get(0).getFechaActualizacion().toString();
-
-            for (int i=1; i<actualizaciones.size(); i++) {
-                found += " - " + (i+1) + ") Nombre producto: " + actualizaciones.get(i).getProducto().getNombre() + " "
-                + ", Marca: " + actualizaciones.get(i).getProducto().getMarca() + " "
-                + ", Cantidad: " + actualizaciones.get(i).getProducto().getCantidad() + " "
-                + ", Precio: " + actualizaciones.get(i).getProducto().getPrecio() + " "
-                + ", Fecha: " + actualizaciones.get(i).getFechaActualizacion().toString();
-            }
-        }else{
-            found += ", no existen actualizaciones asociadas a este nickname. ";
-        }
-        return found;
+        return ob;
     }
 }
