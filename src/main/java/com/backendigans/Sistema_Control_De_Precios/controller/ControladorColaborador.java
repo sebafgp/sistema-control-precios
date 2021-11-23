@@ -84,13 +84,13 @@ public class ControladorColaborador {
     }
 
     @GetMapping("/reputacionYActualizacionesDeColaboradorPorNickname/{nickname}")
-    public ResponseEntity<String> getReputacionYActualizacionesDeColaboradorPorNickname(@PathVariable String nickname) {
+    public ResponseEntity<List<Object>> getReputacionYActualizacionesDeColaboradorPorNickname(@PathVariable String nickname) {
         try {
-            String colaborador = colaboradorService.getColaboradorRepAct(nickname);
+            List<Object> colaborador = colaboradorService.getColaboradorRepAct(nickname);
            
-            return new ResponseEntity<String>(colaborador, HttpStatus.OK);
+            return new ResponseEntity<List<Object>>(colaborador, HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<Object>>(HttpStatus.NOT_FOUND);
         }
     }
 }
