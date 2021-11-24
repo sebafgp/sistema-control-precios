@@ -51,11 +51,11 @@ public class ServicioColaboradorTest {
         assertEquals(lista.size(), resultado.size());
     }*/
 
-    private List<Object> cargarDatosLista() {
+    /*private List<Object> cargarDatosLista() {
         Colaborador colaborador = new Colaborador(1, "marco@mail.com", "123", "Marco", 0, 0);
         Producto producto = new Producto(1, "Tallarines", "Luchetti", 1, 1000, LocalDateTime.parse("2021-11-24T12:00:00"));
         Actualizacion actualizacion = new Actualizacion(1, colaborador, producto, 2000, LocalDateTime.parse("2021-11-24T12:00:00"), 0);
-        List<Object> ob = new ArrayList<>();
+        List<Object> ob = new ArrayList<>(); 
 
         Set<Producto> productos = new HashSet<>();
         Set<Actualizacion> actualizaciones = new HashSet<>();
@@ -71,5 +71,5 @@ public class ServicioColaboradorTest {
         ob.add(colaborador.getActualizaciones());
 
         return ob;
-    }
+    } */
 }

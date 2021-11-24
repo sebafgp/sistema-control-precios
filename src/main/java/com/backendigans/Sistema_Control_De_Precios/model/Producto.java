@@ -33,6 +33,8 @@ public class Producto {
 	private String marca;
 	@Column(name = "cantidad")
 	private int cantidad;
+	@Column(name = "unidad")
+	private String unidad;
 	@Column(name = "precio")
 	private int precio;
 	@Column(name = "fechaActualizacion")
@@ -59,17 +61,14 @@ public class Producto {
 	public Producto() {
 	}
 
-	public Producto(int productoID, String nombre, String marca, int cantidad, int precio , LocalDateTime fechaActualizacion) {
+	public Producto(int productoID, String nombre, String marca, int cantidad, String unidad, int precio , LocalDateTime fechaActualizacion) {
 		this.productoID = productoID;
 		this.nombre = nombre;
 		this.marca = marca;
 		this.cantidad = cantidad;
+		this.unidad = unidad;
 		this.precio = precio;
 		this.fechaActualizacion = fechaActualizacion;
-	}
-
-	public int getId() {
-		return productoID;
 	}
 
     public String getNombre(){
@@ -83,6 +82,9 @@ public class Producto {
     public int getCantidad(){
         return cantidad;
     }
+	public String getUnidad() {
+		return unidad;
+	}
 
     public int getPrecio(){
         return precio;
@@ -107,6 +109,9 @@ public class Producto {
 	}
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
+	}
+	public void setUnidad(String unidad) {
+		this.unidad = unidad;
 	}
 	public void setPrecio(int precio) {
 		this.precio = precio;

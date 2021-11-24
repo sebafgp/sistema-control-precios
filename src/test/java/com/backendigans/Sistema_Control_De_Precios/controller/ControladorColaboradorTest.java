@@ -49,7 +49,7 @@ public class ControladorColaboradorTest {
     }
 
     //HU07
-    @Test
+   /* @Test
     @DisplayName("Buscar reputación y actualizaciones por nickname - Lista Existe")
     void siInvocoGetColaboradorRepActYExisteEntoncesRetornarListaNoVaciaYStatusOk() throws Exception{
 
@@ -110,5 +110,5 @@ public class ControladorColaboradorTest {
         ob.add(colaborador.getActualizaciones());
 
         return ob;
-    }
+    } */
 }
