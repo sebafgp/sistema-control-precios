@@ -19,6 +19,7 @@ import javax.persistence.criteria.Join;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -106,10 +107,12 @@ public class Colaborador {
         this.nickname = nickname;
     }
 
+    @JsonProperty
     public int getPuntos() {
         return this.puntos;
     }
 
+    @JsonIgnore
     public void setPuntos(int puntos) {
         this.puntos = puntos;
     }
@@ -121,10 +124,12 @@ public class Colaborador {
         this.puntos = this.puntos + puntosAdicionales;
     }
 
+    @JsonProperty
     public int getReputacion() {
         return this.reputacion;
     }
 
+    @JsonIgnore
     public void setReputacion(int reputacion) {
         this.reputacion = reputacion;
     }
