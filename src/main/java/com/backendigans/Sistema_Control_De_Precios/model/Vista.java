@@ -7,4 +7,5 @@ public class Vista {
     public static class Colaborador {}
     public static class Recompensa {}
     public static class Actualizacion {}
+    public static class ProductoColaborador {}
 }

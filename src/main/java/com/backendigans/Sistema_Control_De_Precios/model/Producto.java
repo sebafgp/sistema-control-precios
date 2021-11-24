@@ -39,7 +39,7 @@ public class Producto {
 	private LocalDateTime fechaActualizacion;
 
 
-	@JsonView(Vista.Producto.class)
+	@JsonView(Vista.ProductoColaborador.class)
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "producto_colaborador",
 		joinColumns = {@JoinColumn(name = "productoID")},
