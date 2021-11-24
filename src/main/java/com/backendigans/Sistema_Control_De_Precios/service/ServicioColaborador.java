@@ -16,5 +16,5 @@ public interface ServicioColaborador {
 
     public List<String> getTopColaboradores();
 
-    public String getColaboradorRepAct(String nickname);
+    public List<Object> getColaboradorRepAct(String nickname);
 }
