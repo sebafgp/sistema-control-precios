@@ -19,6 +19,7 @@ import javax.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 @Service
 @Transactional
@@ -79,7 +80,6 @@ public class ImplServicioColaborador implements ServicioColaborador {
         ob.add(colaborador.getNickname());
         ob.add(colaborador.getReputacion());
         ob.add(colaborador.getActualizaciones());
-
         return ob;
     }
 }

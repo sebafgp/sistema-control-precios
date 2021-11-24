@@ -87,8 +87,12 @@ public class ControladorColaborador {
     public ResponseEntity<List<Object>> getReputacionYActualizacionesDeColaboradorPorNickname(@PathVariable String nickname) {
         try {
             List<Object> colaborador = colaboradorService.getColaboradorRepAct(nickname);
-           
-            return new ResponseEntity<List<Object>>(colaborador, HttpStatus.OK);
+            
+            if(!colaborador.isEmpty()){
+                return new ResponseEntity<List<Object>>(colaborador, HttpStatus.OK);
+            }else{
+                throw new NoSuchElementException();
+            }
         } catch (NoSuchElementException e) {
             return new ResponseEntity<List<Object>>(HttpStatus.NOT_FOUND);
         }
