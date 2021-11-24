@@ -18,12 +18,13 @@ import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 
 @Entity
 @Table(name = "producto")
 @JsonIgnoreProperties(ignoreUnknown = true, 
-                      value = {"colaboradores", "sucursales", "actualizaciones"})
+                      value = {"colaboradores", /*"sucursales",*/ "actualizaciones"})
 public class Producto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +47,7 @@ public class Producto {
 	)
 	private Set<Colaborador> colaboradores = new HashSet<>();
 
+	@JsonView(Vista.Producto.class)
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productos")
 	private Set<Sucursal> sucursales = new HashSet<>();
 
@@ -139,4 +141,7 @@ public class Producto {
 		this.actualizaciones = actualizaciones;
 	}
 
+	public void addSucursal(Sucursal sucursal){
+		this.sucursales.add(sucursal);
+	}
 }

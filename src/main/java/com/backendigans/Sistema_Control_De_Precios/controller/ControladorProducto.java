@@ -4,7 +4,11 @@ package com.backendigans.Sistema_Control_De_Precios.controller;
 import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
 import com.backendigans.Sistema_Control_De_Precios.model.Producto;
+import com.backendigans.Sistema_Control_De_Precios.model.Sucursal;
+import com.backendigans.Sistema_Control_De_Precios.model.Vista;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioProducto;
+import com.backendigans.Sistema_Control_De_Precios.service.ServicioSucursal;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioActualizacion;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
 
@@ -14,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -27,7 +32,10 @@ public class ControladorProducto {
     ServicioColaborador servicioColaborador;
     @Autowired
     ServicioActualizacion servicioActualizacion;
+    @Autowired
+    ServicioSucursal servicioSucursal;
 
+    @JsonView(Vista.Producto.class)
     @GetMapping("")
     public List<Producto> list() {
         return servicioProducto.listAllProductos();
@@ -47,12 +55,13 @@ public class ControladorProducto {
         Producto producto;
         String email;
         String contrasena;
+        int sucursalID;
 
-		public RequestWrapper(Producto producto, String email, String contrasena) {
+		public RequestWrapper(Producto producto, String email, String contrasena, int sucursalID) {
             this.producto = producto;
             this.email = email;
             this.contrasena = contrasena;
-
+            this.sucursalID = sucursalID;
 		}
     }
 
@@ -61,20 +70,23 @@ public class ControladorProducto {
     public ResponseEntity<Object> addProducto(@RequestBody RequestWrapper datos){
         String email = datos.email;
         String contrasena = datos.contrasena;
+        int sucursalID = datos.sucursalID;
         Producto producto = datos.producto;
         producto.setFechaActualizacion(LocalDateTime.now());
 
 
         try {
             Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
-
             Actualizacion actualizacion = new Actualizacion(colaborador, producto, producto.getPrecio());
-
-            
+            Sucursal sucursal = servicioSucursal.getSucursal(sucursalID);
+            producto.addSucursal(sucursal);
+            sucursal.addProducto(producto);
+                    
+            colaborador.addPuntos(1);
             servicioColaborador.saveColaborador(colaborador);
             servicioProducto.colaboradorGuardaProducto(producto, colaborador);
             servicioActualizacion.saveActualizacion(actualizacion);
-            colaborador.addPuntos(1);
+            
             return new ResponseEntity<Object>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
@@ -178,6 +190,7 @@ public class ControladorProducto {
         servicioProducto.deleteProducto(id);
     }
 
+    @JsonView(Vista.Producto.class)
     @GetMapping("/buscarPorNombre/{nombre}")
     public ResponseEntity<List<Producto>> getByNombre(@PathVariable String nombre) {
         try {

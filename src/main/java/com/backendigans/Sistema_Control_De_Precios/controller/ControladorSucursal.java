@@ -2,7 +2,9 @@
 package com.backendigans.Sistema_Control_De_Precios.controller;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Sucursal;
+import com.backendigans.Sistema_Control_De_Precios.model.Vista;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioSucursal;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ public class ControladorSucursal {
     ServicioSucursal servicioSucursal;
     ServicioColaborador servicioColaborador;
 
+    @JsonView(Vista.Sucursal.class)
     @GetMapping("")
     public List<Sucursal> list() {
         return servicioSucursal.listAllSucursals();

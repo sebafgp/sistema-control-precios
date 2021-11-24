@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "sucursal")
@@ -39,6 +40,7 @@ public class Sucursal {
     @JoinColumn(name = "cadenaID")
     private Cadena cadena;
 
+    @JsonView(Vista.Sucursal.class)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "sucursal_producto",
         joinColumns = {@JoinColumn(name = "sucursalID")},
@@ -103,6 +105,10 @@ public class Sucursal {
 
     public void setProductos(Set<Producto> productos) {
         this.productos = productos;
+    }
+
+    public void addProducto(Producto producto) {
+        this.productos.add(producto);
     }
 
 }
