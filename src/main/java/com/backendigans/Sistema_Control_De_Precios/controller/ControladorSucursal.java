@@ -28,6 +28,7 @@ public class ControladorSucursal {
         return servicioSucursal.listAllSucursals();
     }
 
+    @JsonView(Vista.Sucursal.class)
     @GetMapping("/{id}")
     public ResponseEntity<Sucursal> get(@PathVariable Integer id) {
         try {

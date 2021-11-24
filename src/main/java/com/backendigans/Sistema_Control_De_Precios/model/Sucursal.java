@@ -22,8 +22,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "sucursal")
-@JsonIgnoreProperties(ignoreUnknown = true, 
-                      value = {"cadena"})
 public class Sucursal {
     @Id
     @Column(name = "sucursalID")
@@ -36,6 +34,7 @@ public class Sucursal {
     @Column(name = "numero")
     private int numero;
 
+    @JsonView(Vista.Sucursal.class)
     @ManyToOne(/*optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER*/)
     @JoinColumn(name = "cadenaID")
     private Cadena cadena;

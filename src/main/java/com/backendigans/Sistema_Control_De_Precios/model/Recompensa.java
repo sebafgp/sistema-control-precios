@@ -15,11 +15,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "recompensa")
-@JsonIgnoreProperties(ignoreUnknown = true, 
-                      value = {"colaboradores"})
 public class Recompensa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +28,8 @@ public class Recompensa {
     private int stock;
     private String descripcion;
 
+
+	@JsonView(Vista.Recompensa.class)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "recompensas")
 	private Set<Colaborador> colaboradores = new HashSet<>();
 

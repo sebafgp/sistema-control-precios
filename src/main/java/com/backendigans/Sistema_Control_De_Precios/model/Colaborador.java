@@ -19,6 +19,7 @@ import javax.persistence.criteria.Join;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -26,8 +27,6 @@ import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "colaborador")
-@JsonIgnoreProperties(ignoreUnknown = true, 
-                      value = {"productos", "recompensas", "actualizaciones"})
 public class Colaborador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,9 +46,11 @@ public class Colaborador {
     @JsonIgnore
     private int reputacion;
 
+    @JsonView(Vista.Colaborador.class)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "colaboradores")
 	private Set <Producto> productos = new HashSet<>();
 
+    @JsonView(Vista.Colaborador.class)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "colaborador_recompensa",
         joinColumns = {@JoinColumn(name = "colaboradorID")},
@@ -57,6 +58,7 @@ public class Colaborador {
     )
     private Set<Recompensa> recompensas = new HashSet<>();
     
+    @JsonView(Vista.Colaborador.class)
     @OneToMany(mappedBy = "colaborador")
     private Set<Actualizacion> actualizaciones = new HashSet<>();
 

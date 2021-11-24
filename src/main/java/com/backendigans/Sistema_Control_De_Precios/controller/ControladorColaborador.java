@@ -3,8 +3,10 @@ package com.backendigans.Sistema_Control_De_Precios.controller;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
+import com.backendigans.Sistema_Control_De_Precios.model.Vista;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioActualizacion;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +25,13 @@ public class ControladorColaborador {
     @Autowired
     ServicioActualizacion actualizacionService;
 
+    @JsonView(Vista.Colaborador.class)
     @GetMapping("")
     public List<Colaborador> list() {
         return colaboradorService.listAllColaboradores();
     }
 
+    @JsonView(Vista.Colaborador.class)
     @GetMapping("/{colaboradorID}")
     public ResponseEntity<Colaborador> get(@PathVariable Integer colaboradorID) {
         try {

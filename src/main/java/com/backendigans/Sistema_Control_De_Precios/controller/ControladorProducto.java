@@ -41,6 +41,7 @@ public class ControladorProducto {
         return servicioProducto.listAllProductos();
     }
 
+    @JsonView(Vista.Producto.class)
     @GetMapping("/{id}")
     public ResponseEntity<Producto> get(@PathVariable Integer id) {
         try {
@@ -205,6 +206,7 @@ public class ControladorProducto {
         }
     }
     
+    @JsonView(Vista.Producto.class)
     @GetMapping("/buscarPorPrecio/{precio}")
     public ResponseEntity<List<Producto>> buscarPorPrecio(@PathVariable Integer precio){
         try{

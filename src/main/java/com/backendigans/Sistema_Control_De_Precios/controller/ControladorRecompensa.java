@@ -2,7 +2,9 @@
 package com.backendigans.Sistema_Control_De_Precios.controller;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Recompensa;
+import com.backendigans.Sistema_Control_De_Precios.model.Vista;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioRecompensa;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,13 @@ public class ControladorRecompensa {
     ServicioRecompensa servicioRecompensa;
     ServicioColaborador servicioColaborador;
 
+    @JsonView(Vista.Recompensa.class)
     @GetMapping("")
     public List<Recompensa> list() {
         return servicioRecompensa.listAllRecompensas();
     }
 
+    @JsonView(Vista.Recompensa.class)
     @GetMapping("/{id}")
     public ResponseEntity<Recompensa> get(@PathVariable Integer id) {
         try {

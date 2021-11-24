@@ -2,8 +2,10 @@
 package com.backendigans.Sistema_Control_De_Precios.controller;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Cadena;
+import com.backendigans.Sistema_Control_De_Precios.model.Vista;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioCadena;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +22,13 @@ public class ControladorCadena {
     ServicioCadena servicioCadena;
     ServicioColaborador servicioColaborador;
 
+    @JsonView(Vista.Cadena.class)
     @GetMapping("")
     public List<Cadena> list() {
         return servicioCadena.listAllCadenas();
     }
 
+    @JsonView(Vista.Cadena.class)
     @GetMapping("/{id}")
     public ResponseEntity<Cadena> get(@PathVariable Integer id) {
         try {

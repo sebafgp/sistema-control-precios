@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity
 @Table(name = "cadena")
 public class Cadena {
@@ -20,6 +22,7 @@ public class Cadena {
     private int cadenaID;
     private String nombre;
 
+    @JsonView(Vista.Cadena.class)
     @OneToMany (mappedBy = "cadena")
     private Set<Sucursal> sucursales = new HashSet<>();
 

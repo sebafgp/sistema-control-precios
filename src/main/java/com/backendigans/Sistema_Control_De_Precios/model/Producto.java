@@ -23,8 +23,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "producto")
-@JsonIgnoreProperties(ignoreUnknown = true, 
-                      value = {"colaboradores", /*"sucursales",*/ "actualizaciones"})
 public class Producto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +38,8 @@ public class Producto {
 	@Column(name = "fechaActualizacion")
 	private LocalDateTime fechaActualizacion;
 
+
+	@JsonView(Vista.Producto.class)
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "producto_colaborador",
 		joinColumns = {@JoinColumn(name = "productoID")},
@@ -52,6 +52,7 @@ public class Producto {
 	private Set<Sucursal> sucursales = new HashSet<>();
 
 
+	@JsonView(Vista.Producto.class)
     @OneToMany(mappedBy = "producto")
     private Set<Actualizacion> actualizaciones = new HashSet<>();
 	
