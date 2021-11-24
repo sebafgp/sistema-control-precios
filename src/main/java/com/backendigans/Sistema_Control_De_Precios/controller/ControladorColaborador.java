@@ -65,6 +65,7 @@ public class ControladorColaborador {
         colaboradorService.deleteColaborador(colaboradorID);
     }
 
+    @JsonView(Vista.Actualizacion.class)
     @GetMapping("/valoraciones/{colaboradorID}")
     public ResponseEntity<List<Actualizacion>> getValoraciones(@PathVariable Integer colaboradorID) {
         try {

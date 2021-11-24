@@ -21,11 +21,10 @@ import javax.persistence.TemporalType;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "actualizacion")
-@JsonIgnoreProperties(ignoreUnknown = true, 
-                      value = {"colaborador"})
 public class Actualizacion {
 
 
@@ -33,10 +32,12 @@ public class Actualizacion {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int actualizacionID;
 
+    @JsonView(Vista.Actualizacion.class)
     @ManyToOne
     @JoinColumn(name = "colaboradorID", referencedColumnName = "colaboradorID")
     private Colaborador colaborador;
 
+    @JsonView(Vista.Actualizacion.class)
     @ManyToOne
     @JoinColumn(name = "productoID", referencedColumnName = "productoID")
     private Producto producto;
