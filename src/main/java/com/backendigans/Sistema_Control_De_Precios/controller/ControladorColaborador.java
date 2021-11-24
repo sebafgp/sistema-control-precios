@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -77,6 +79,16 @@ public class ControladorColaborador {
         }
     }
 
+    /*Retornar lista de LinkedHashMap<String, Object>
+    {
+        {   <"nickname1", nickname1>
+            <"reputacion1", reputacion1>}
+        {   <"nickname2", nickname2>
+            <"reputacion2", reputacion2>}
+        {   <"nickname3", nickname3>
+            <"reputacion3", reputacion3>}
+    }
+*/
     @GetMapping("/topColaboradores")
     public ResponseEntity<List<String>> getTopColaboradores() {
         try {
@@ -88,18 +100,23 @@ public class ControladorColaborador {
         }
     }
 
+    @JsonView(Vista.Colaborador.class)
     @GetMapping("/reputacionYActualizacionesDeColaboradorPorNickname/{nickname}")
-    public ResponseEntity<List<Object>> getReputacionYActualizacionesDeColaboradorPorNickname(@PathVariable String nickname) {
+    public ResponseEntity<LinkedHashMap<String, Object>> getReputacionYActualizacionesDeColaboradorPorNickname(@PathVariable String nickname) {
         try {
-            List<Object> colaborador = colaboradorService.getColaboradorRepAct(nickname);
-            
-            if(!colaborador.isEmpty()){
-                return new ResponseEntity<List<Object>>(colaborador, HttpStatus.OK);
+            Colaborador colaborador = colaboradorService.getColaboradorRepAct(nickname);
+
+            if(colaborador!=null){
+                LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+                map.put("nickname", colaborador.getNickname());
+                map.put("reputacion", colaborador.getReputacion());
+                map.put("actualizaciones", colaborador.getActualizaciones());
+                return new ResponseEntity<LinkedHashMap<String, Object>>(map, HttpStatus.OK);
             }else{
                 throw new NoSuchElementException();
             }
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<List<Object>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<LinkedHashMap<String, Object>>(HttpStatus.NOT_FOUND);
         }
     }
 }

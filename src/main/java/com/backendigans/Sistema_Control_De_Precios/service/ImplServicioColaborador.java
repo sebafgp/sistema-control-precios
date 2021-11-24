@@ -74,12 +74,7 @@ public class ImplServicioColaborador implements ServicioColaborador {
     }
 
     @Override
-    public List<Object> getColaboradorRepAct(String nickname) {
-        Colaborador colaborador = colaboradorRepository.findFirstByNickname(nickname);
-        List<Object> ob = new ArrayList<>();
-        ob.add(colaborador.getNickname());
-        ob.add(colaborador.getReputacion());
-        ob.add(colaborador.getActualizaciones());
-        return ob;
+    public Colaborador getColaboradorRepAct(String nickname) {
+        return colaboradorRepository.findFirstByNickname(nickname);
     }
 }
