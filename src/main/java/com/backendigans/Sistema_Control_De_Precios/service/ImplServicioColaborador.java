@@ -53,23 +53,21 @@ public class ImplServicioColaborador implements ServicioColaborador {
     }
 
     @Override
-    /*public List<Colaborador> getTopColaboradores() {
-            List <Colaborador> colaboradores=colaboradorRepository.findAll();
 
-            List <Colaborador> colaboradores=colaboradorRepository.findTopColaboradores(Pageable.unpaged().getSort().by(Sort.Order.desc("reputacion")));
-            return colaboradorRepository.findTop10ByOrderByReputacionDesc();
-    }*/
-    
-    public List<String> getTopColaboradores(){
+    public List<Colaborador> getTopColaboradores() {
 
-        List<Colaborador> colaboradores = colaboradorRepository.findByOrderByReputacionDesc(Sort.by(Sort.Order.desc("reputacion")));
-        colaboradores = colaboradores.subList(0, 3);
-        List<String> topTres=new ArrayList<String>();
-        for (Colaborador c : colaboradores) {
-            topTres.add(c.getNickname()+", reputacion: "+c.getReputacion());
+        List<Colaborador> colaboradores = colaboradorRepository
+                .findByOrderByReputacionDesc(Sort.by(Sort.Order.desc("reputacion")));
+        if (colaboradores.size() == 0 || colaboradores.size() == 1) {
+            return colaboradores;
+
+        } else if (colaboradores.size() == 2) {
+            colaboradores = colaboradores.subList(0, 2);
+        } else {
+            colaboradores = colaboradores.subList(0, 3);
         }
 
-        return topTres;
+        return colaboradores;
 
     }
 
