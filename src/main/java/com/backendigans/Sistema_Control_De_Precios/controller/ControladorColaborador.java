@@ -13,9 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -90,13 +92,24 @@ public class ControladorColaborador {
     }
 */
     @GetMapping("/topColaboradores")
-    public ResponseEntity<List<String>> getTopColaboradores() {
+    public ResponseEntity<List<LinkedHashMap<String, Object>>> getTopColaboradores() {
         try {
-            List <String> colaboradores = colaboradorService.getTopColaboradores();
-           
-            return new ResponseEntity<List<String>>(colaboradores, HttpStatus.OK);
+            List<Colaborador> colaboradores = colaboradorService.getTopColaboradores();
+            if (!colaboradores.isEmpty()) {
+                List<LinkedHashMap<String, Object>> topTres = new ArrayList<>();
+                for (int i = 0; i < colaboradores.size(); i++) {
+                    LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+                    map.put("nickname", colaboradores.get(i).getNickname());
+                    map.put("reputacion", colaboradores.get(i).getReputacion());
+                    topTres.add(map);
+                }
+                return new ResponseEntity<List<LinkedHashMap<String, Object>>>(topTres, HttpStatus.OK);
+            } else {
+                throw new NoSuchElementException();
+            }
+
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<List<String>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<LinkedHashMap<String, Object>>>(HttpStatus.NOT_FOUND);
         }
     }
 

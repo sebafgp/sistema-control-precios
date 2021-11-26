@@ -14,7 +14,7 @@ public interface ServicioColaborador {
 
     public Colaborador buscarColaboradorPorEmail(String email, String contrasena);
 
-    public List<String> getTopColaboradores();
+    public List<Colaborador> getTopColaboradores();
 
     public Colaborador getColaboradorRepAct(String nickname);
 }
