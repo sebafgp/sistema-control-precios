@@ -26,8 +26,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javassist.expr.NewArray;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 public class ControladorColaboradorTest {
 
-    private JacksonTester<Colaborador> jsonProducto;
+    private JacksonTester<Colaborador> jsonColaborador;
     private MockMvc mockMvc;
     @Mock
     private ServicioColaborador colaboradorService;
@@ -47,6 +52,99 @@ public class ControladorColaboradorTest {
         JacksonTester.initFields(this,new ObjectMapper());
         mockMvc = MockMvcBuilders.standaloneSetup(colaboradorController).build();
     }
+
+    /* HU_01 */
+
+    @Test
+    @DisplayName("Crear colaborador - datos validos")
+    void siCreoNuevoColaboradorConDatosValidosSeGuardaEnLaBDD() throws Exception {
+        // Given
+        Colaborador colaborador = crearColaborador();
+        given(colaboradorService.saveColaborador(any(Colaborador.class))).willReturn(colaborador);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/colaborador")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonColaborador.write(colaborador).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(jsonColaborador.write(colaborador).getJson(),response.getContentAsString());
+    }
+
+    @Test
+    @DisplayName("Crear colaborador - datos no validos - email")
+    void siCreoNuevoColaboradorConEmailNoValidoNoSeGuardaEnLaBDDYLanzaIllegalArgumentException() throws Exception {
+        // Given
+        Colaborador colaborador = crearColaborador();
+        colaborador.setEmail(null);
+        doThrow(IllegalArgumentException.class).when(colaboradorService).saveColaborador(any(Colaborador.class));
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/colaborador")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonColaborador.write(colaborador).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Crear colaborador - datos no validos - contrasena")
+    void siCreoNuevoColaboradorConContrasenaNoValidaNoSeGuardaEnLaBDDYLanzaIllegalArgumentException() throws Exception {
+        // Given
+        Colaborador colaborador = crearColaborador();
+        colaborador.setContrasena(null);
+        doThrow(IllegalArgumentException.class).when(colaboradorService).saveColaborador(any(Colaborador.class));
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/colaborador")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonColaborador.write(colaborador).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Crear colaborador - datos no validos - nickname")
+    void siCreoNuevoColaboradorConNicknameNoValidoNoSeGuardaEnLaBDDYLanzaIllegalArgumentException() throws Exception {
+        // Given
+        Colaborador colaborador = crearColaborador();
+        colaborador.setContrasena(null);
+        doThrow(IllegalArgumentException.class).when(colaboradorService).saveColaborador(any(Colaborador.class));
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/colaborador")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonColaborador.write(colaborador).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+
+
+    /* Funciones Utilidad */
+
+    private Colaborador crearColaborador(){
+        Colaborador c = new Colaborador("ex@mail.com", "password", "nick");
+        return c;
+    }
+
+
 
     //HU07
    /* @Test

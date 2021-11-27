@@ -69,6 +69,14 @@ public class Colaborador {
     public Colaborador(){
     }
 
+    public Colaborador(String email, String contrasena, String nickname) {
+        this.email = email;
+        this.contrasena = contrasena;
+        this.nickname = nickname;
+        this.puntos = 0;
+        this.reputacion = 0;
+    }
+
     public Colaborador (int colaboradorID, String email, String contrasena, String nickname, int puntos, int reputacion){
         this.colaboradorID = colaboradorID;
         this.email = email;
