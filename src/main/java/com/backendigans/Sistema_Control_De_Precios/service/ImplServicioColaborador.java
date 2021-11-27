@@ -72,7 +72,7 @@ public class ImplServicioColaborador implements ServicioColaborador {
     }
 
     @Override
-    public Colaborador getColaboradorRepAct(String nickname) {
+    public Colaborador getColaboradorByNickname(String nickname) {
         return colaboradorRepository.findFirstByNickname(nickname);
     }
 }

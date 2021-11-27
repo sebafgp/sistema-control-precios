@@ -117,7 +117,7 @@ public class ControladorColaborador {
     @GetMapping("/reputacionYActualizacionesDeColaboradorPorNickname/{nickname}")
     public ResponseEntity<LinkedHashMap<String, Object>> getReputacionYActualizacionesDeColaboradorPorNickname(@PathVariable String nickname) {
         try {
-            Colaborador colaborador = colaboradorService.getColaboradorRepAct(nickname);
+            Colaborador colaborador = colaboradorService.getColaboradorByNickname(nickname);
 
             if(colaborador!=null){
                 LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();

@@ -3,7 +3,9 @@ package com.backendigans.Sistema_Control_De_Precios.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
@@ -49,15 +52,15 @@ public class ControladorColaboradorTest {
     }
 
     //HU07
-   /* @Test
-    @DisplayName("Buscar reputación y actualizaciones por nickname - Lista Existe")
-    void siInvocoGetColaboradorRepActYExisteEntoncesRetornarListaNoVaciaYStatusOk() throws Exception{
+    @Test
+    @DisplayName("Buscar colaborador por nickname - Colaborador existe")
+    void siInvocoGetColaboradorByNicknameYExisteEntoncesRetornarEseColaboradorYStatusOk() throws Exception{
 
         // Given
-        List<Object> lista = cargarDatosLista();
+        Colaborador colaborador = new Colaborador(1, "marco@mail.com", "123", "Marco", 0, 10);
         String nickname = "Marco";
 
-        given(colaboradorService.getColaboradorRepAct(nickname)).willReturn(lista);
+        given(colaboradorService.getColaboradorByNickname(nickname)).willReturn(colaborador);
 
         // When
         MockHttpServletResponse response = mockMvc.perform(get("/colaborador/reputacionYActualizacionesDeColaboradorPorNickname/Marco")
@@ -67,18 +70,16 @@ public class ControladorColaboradorTest {
 
         // Then
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-
     }
-
+    
     @Test
-    @DisplayName("Buscar reputación y actualizaciones por nickname - Lista No Existe")
-    void siInvocoGetColaboradorRepActYEseNicknameNoExisteEntoncesRetornarListaVaciaYStatusNotFound() throws Exception{
+    @DisplayName("Buscar reputación y actualizaciones por nickname - Colaborador no existe")
+    void siInvocoGetColaboradorByNicknameYEseNicknameNoExisteEntoncesRetornarNoSuchElementExceptionYStatusNotFound() throws Exception{
 
-        // Given
-        List<Object> lista = new ArrayList<>();
+        //Given
         String nickname = "Marco";
 
-        given(colaboradorService.getColaboradorRepAct(nickname)).willReturn(lista);
+        given(colaboradorService.getColaboradorByNickname(nickname)).willThrow(new NoSuchElementException());
 
         // When
         MockHttpServletResponse response = mockMvc.perform(get("/colaborador/reputacionYActualizacionesDeColaboradorPorNickname/Marco")
@@ -90,11 +91,12 @@ public class ControladorColaboradorTest {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
-    private List<Object> cargarDatosLista() {
-        Colaborador colaborador = new Colaborador(1, "marco@mail.com", "123", "Marco", 0, 0);
-        Producto producto = new Producto(1, "Tallarines", "Luchetti", 1, 1000, LocalDateTime.parse("2021-11-24T12:00:00"));
+    private LinkedHashMap<String, Object> cargarDatosHU07() {
+        Colaborador colaborador = new Colaborador(1, "marco@mail.com", "123", "Marco", 0, 10);
+        Producto producto = new Producto(1, "Tallarines", "Luchetti", 1, "grs", 1000, LocalDateTime.parse("2021-11-24T12:00:00"));
         Actualizacion actualizacion = new Actualizacion(1, colaborador, producto, 2000, LocalDateTime.parse("2021-11-24T12:00:00"), 0);
-        List<Object> ob = new ArrayList<>();
+
+        LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 
         Set<Producto> productos = new HashSet<>();
         Set<Actualizacion> actualizaciones = new HashSet<>();
@@ -105,10 +107,9 @@ public class ControladorColaboradorTest {
         colaborador.setProductos(productos);
         colaborador.setActualizacion(actualizaciones);
 
-        ob.add(colaborador.getNickname());
-        ob.add(colaborador.getReputacion());
-        ob.add(colaborador.getActualizaciones());
-
-        return ob;
-    } */
+        map.put("nickname", colaborador.getNickname());
+        map.put("reputacion", colaborador.getReputacion());
+        map.put("actualizaciones", colaborador.getActualizaciones());
+        return map;
+    }
 }
