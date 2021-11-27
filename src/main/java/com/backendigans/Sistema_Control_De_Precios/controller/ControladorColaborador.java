@@ -132,4 +132,33 @@ public class ControladorColaborador {
             return new ResponseEntity<LinkedHashMap<String, Object>>(HttpStatus.NOT_FOUND);
         }
     }
+
+    static public class updateContrasenaWrapper {
+        String email;
+        String contrasena;
+        String nuevaContrasena;
+
+		public updateContrasenaWrapper(String email, String contrasena, String nuevaContrasena) {
+            this.email = email;
+            this.contrasena = contrasena;
+            this.nuevaContrasena = nuevaContrasena;
+		}
+    }
+    @PutMapping("/updateContrasena")
+    public ResponseEntity<?> updateContrasena(@RequestBody updateContrasenaWrapper datos ) {
+    	String email = datos.email;
+    	String contrasena = datos.contrasena;
+    	String nuevaContrasena = datos.nuevaContrasena;
+        if (nuevaContrasena.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            Colaborador colaborador = colaboradorService.buscarColaboradorPorEmail(email, contrasena);
+            colaborador.setContrasena(nuevaContrasena);
+            colaboradorService.saveColaborador(colaborador);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
