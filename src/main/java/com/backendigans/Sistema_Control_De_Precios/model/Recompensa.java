@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -32,6 +33,9 @@ public class Recompensa {
 	@JsonView(Vista.Recompensa.class)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "recompensas")
 	private Set<Colaborador> colaboradores = new HashSet<>();
+
+    @OneToMany(mappedBy = "recompensa")
+    private Set<Canje> canjes = new HashSet<>();
 
     public Recompensa(){
 
@@ -92,5 +96,13 @@ public class Recompensa {
     public void setColaboradores(Set<Colaborador> colaboradores) {
         this.colaboradores = colaboradores;
     }
-
+    public Set<Canje> getCanjes() {
+        return canjes;
+    }
+    public void setCanjes(Set<Canje> canjes) {
+        this.canjes = canjes;
+    }    
+    public void addCanje(Canje canje) {
+        this.canjes.add(canje);
+    }
 }
