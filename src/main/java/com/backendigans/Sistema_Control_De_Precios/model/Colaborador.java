@@ -63,6 +63,9 @@ public class Colaborador {
     @OneToMany(mappedBy = "colaborador")
     private Set<Actualizacion> actualizaciones = new HashSet<>();
 
+    @OneToMany(mappedBy = "colaborador")
+    private Set<Canje> canjes = new HashSet<>();
+
     public Colaborador(){
     }
 
@@ -155,4 +158,13 @@ public class Colaborador {
     public void setActualizacion(Set<Actualizacion> actualizaciones) {
         this.actualizaciones = actualizaciones;
     }    
+    public Set<Canje> getCanjes() {
+        return canjes;
+    }
+    public void setCanjes(Set<Canje> canjes) {
+        this.canjes = canjes;
+    }    
+    public void addCanje(Canje canje) {
+        this.canjes.add(canje);
+    }
 }
