@@ -161,4 +161,34 @@ public class ControladorColaborador {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    static public class updateNicknameWrapper {
+        String email;
+        String contrasena;
+        String nuevoNickname;
+
+		public updateNicknameWrapper(String email, String contrasena, String nuevoNickname) {
+            this.email = email;
+            this.contrasena = contrasena;
+            this.nuevoNickname = nuevoNickname;
+		}
+    }
+    @PutMapping("/updateNickname")
+    public ResponseEntity<?> updateNickname(@RequestBody updateNicknameWrapper datos ) {
+    	String email = datos.email;
+    	String contrasena = datos.contrasena;
+    	String nuevoNickname = datos.nuevoNickname;
+        if (nuevoNickname.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            Colaborador colaborador = colaboradorService.buscarColaboradorPorEmail(email, contrasena);
+            colaborador.setNickname(nuevoNickname);
+            colaboradorService.saveColaborador(colaborador);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
