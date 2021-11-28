@@ -24,9 +24,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static org.mockito.BDDMockito.given;
 
@@ -63,6 +61,47 @@ public class ServicioActualizacionTest {
                 () -> actualizacionService.saveActualizacion(actualizacion));
     }
 
+    /* HU_04 */
+    @Test
+    @DisplayName("Get Ultima Actualizacion - Existe")
+    void siInvocoEncontrarUltimaPorProductoDevuelveUnaActualizacionValida(){
+        // Arrange
+        Optional<Actualizacion> resultado;
+        Producto producto = crearProducto();
+        Actualizacion actualizacion = crearActualizacion();
+        Set<Actualizacion> set = new HashSet<>();
+        set.add(actualizacion);
+        producto.setActualizaciones(set);
+        when(actualizacionRepository.findFirstByProductoOrderByFechaActualizacionDesc(producto)).thenReturn(Optional.of(actualizacion));
+
+        // Act
+        resultado = actualizacionService.encontrarUltimaPorProducto(producto);
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(actualizacion, resultado.get());
+    }
+
+    /* HU_04 */
+    @Test
+    @DisplayName("Get Ultima Actualizacion - No Existe")
+    void siInvocoEncontrarUltimaPorProductoNoDevuelveUnaActualizacion(){
+        // Arrange
+        Optional<Actualizacion> resultado;
+        Producto producto = crearProducto();
+        Actualizacion actualizacion = crearActualizacion();
+        Set<Actualizacion> set = new HashSet<>();
+        set.add(actualizacion);
+        producto.setActualizaciones(set);
+        when(actualizacionRepository.findFirstByProductoOrderByFechaActualizacionDesc(producto)).thenReturn(Optional.empty());
+
+        // Act
+        resultado = actualizacionService.encontrarUltimaPorProducto(producto);
+
+        // Assert
+        assertNotNull(resultado);
+        assertFalse(resultado.isPresent());
+    }
 
     /* Funciones Utilidad */
 
