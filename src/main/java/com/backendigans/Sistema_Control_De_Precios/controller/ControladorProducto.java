@@ -58,25 +58,65 @@ public class ControladorProducto {
         String contrasena;
         int sucursalID;
 
+        public RequestWrapper(){
+
+        }
+
 		public RequestWrapper(Producto producto, String email, String contrasena, int sucursalID) {
             this.producto = producto;
             this.email = email;
             this.contrasena = contrasena;
             this.sucursalID = sucursalID;
 		}
+
+        public Producto getProducto() {
+            return producto;
+        }
+
+        public void setProducto(Producto producto) {
+            this.producto = producto;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getContrasena() {
+            return contrasena;
+        }
+
+        public void setContrasena(String contrasena) {
+            this.contrasena = contrasena;
+        }
+
+        public int getSucursalID() {
+            return sucursalID;
+        }
+
+        public void setSucursalID(int sucursalID) {
+            this.sucursalID = sucursalID;
+        }
     }
 
     @PostMapping("/")
     @RequestMapping(produces = "application/json", method = RequestMethod.POST)
     public ResponseEntity<Object> addProducto(@RequestBody RequestWrapper datos){
-        String email = datos.email;
-        String contrasena = datos.contrasena;
-        int sucursalID = datos.sucursalID;
-        Producto producto = datos.producto;
-        producto.setFechaActualizacion(LocalDateTime.now());
-
-
         try {
+            String email = datos.email;
+            String contrasena = datos.contrasena;
+            int sucursalID = datos.sucursalID;
+            Producto producto = datos.producto;
+
+            if(producto == null || servicioProducto.getProducto(producto.getProductoID()) == null){
+                throw new NoSuchElementException();
+            }
+
+            producto.setFechaActualizacion(LocalDateTime.now());
+
             Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
             Actualizacion actualizacion = new Actualizacion(colaborador, producto, producto.getPrecio());
             Sucursal sucursal = servicioSucursal.getSucursal(sucursalID);
@@ -88,9 +128,9 @@ public class ControladorProducto {
             servicioProducto.colaboradorGuardaProducto(producto, colaborador);
             servicioActualizacion.saveActualizacion(actualizacion);
             
-            return new ResponseEntity<Object>(HttpStatus.OK);
+            return new ResponseEntity<Object>(producto, HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Object>(datos.producto, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -99,11 +139,38 @@ public class ControladorProducto {
         String contrasena;
         Boolean like;
 
-		public puntuarProductoWrapper(String email, String contrasena, Boolean like) {
+        public puntuarProductoWrapper() {
+        }
+
+        public puntuarProductoWrapper(String email, String contrasena, Boolean like) {
             this.email = email;
             this.contrasena = contrasena;
             this.like = like;
 		}
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getContrasena() {
+            return contrasena;
+        }
+
+        public void setContrasena(String contrasena) {
+            this.contrasena = contrasena;
+        }
+
+        public Boolean getLike() {
+            return like;
+        }
+
+        public void setLike(Boolean like) {
+            this.like = like;
+        }
     }
 
     @PostMapping("/puntuar/{id}")
@@ -130,9 +197,9 @@ public class ControladorProducto {
 
             servicioActualizacion.saveActualizacion(actualizacion);
 
-            return new ResponseEntity<Object>(HttpStatus.OK);
+            return new ResponseEntity<Object>(HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -142,9 +209,37 @@ public class ControladorProducto {
         int precio;
         String email;
         String contrasena;
+
+        public RequestWrapperActualizar() {
+        }
+
         public RequestWrapperActualizar(int precio, String email, String contrasena) {
             this.precio = precio;
             this.email = email;
+            this.contrasena = contrasena;
+        }
+
+        public int getPrecio() {
+            return precio;
+        }
+
+        public void setPrecio(int precio) {
+            this.precio = precio;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getContrasena() {
+            return contrasena;
+        }
+
+        public void setContrasena(String contrasena) {
             this.contrasena = contrasena;
         }
     }
@@ -168,9 +263,9 @@ public class ControladorProducto {
             servicioColaborador.saveColaborador(colaborador);
             servicioActualizacion.saveActualizacion(actualizacion);
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

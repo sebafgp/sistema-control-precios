@@ -33,8 +33,12 @@ public class ImplServicioColaborador implements ServicioColaborador {
     }
 
     @Override
-    public void saveColaborador(Colaborador colaborador) {
-        colaboradorRepository.save(colaborador);
+    public Colaborador saveColaborador(Colaborador colaborador) {
+        if (colaborador.getEmail() == null || colaborador.getEmail().isEmpty()
+                || colaborador.getContrasena() == null || colaborador.getContrasena().isEmpty()
+                || colaborador.getNickname() == null || colaborador.getNickname().isEmpty())
+            throw new IllegalArgumentException();
+        return colaboradorRepository.save(colaborador);
     }
 
     @Override
@@ -43,8 +47,11 @@ public class ImplServicioColaborador implements ServicioColaborador {
     }
 
     @Override
-    public void deleteColaborador(Integer colaboradorID) {
+    public Colaborador deleteColaborador(Integer colaboradorID) {
+        Colaborador c = getColaborador(colaboradorID);
+        if(c == null) return null;
         colaboradorRepository.deleteById(colaboradorID);
+        return c;
     }
 
     @Override

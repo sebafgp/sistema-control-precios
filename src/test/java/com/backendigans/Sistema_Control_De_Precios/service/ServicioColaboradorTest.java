@@ -1,14 +1,10 @@
 package com.backendigans.Sistema_Control_De_Precios.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
@@ -31,6 +27,142 @@ public class ServicioColaboradorTest {
     @InjectMocks
     private ImplServicioColaborador colaboradorService;
 
+    /* HU_01 */
+
+    @Test
+    @DisplayName("Guardar colaborador - datos validos")
+    void siInvocoSaveColaboradorConDatosValidosSeGuarda(){
+        // Arrange
+        Colaborador resultado;
+        Colaborador colaborador = crearColaborador();
+        when(colaboradorRepository.save(colaborador)).thenReturn(colaborador);
+
+        // Act
+        resultado = colaboradorService.saveColaborador(colaborador);
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(colaborador, resultado);
+
+    }
+
+    @Test
+    @DisplayName("Guardar colaborador - datos no validos - email")
+    void siInvocoSaveColaboradorConEmailNoValidoNoSeGuardaYLanzaIllegalArgumentException(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        colaborador.setEmail(null);
+
+        // Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> colaboradorService.saveColaborador(colaborador));
+
+    }
+
+    @Test
+    @DisplayName("Guardar colaborador - datos no validos - contrasena")
+    void siInvocoSaveColaboradorConContrasenaNoValidaNoSeGuardaYLanzaIllegalArgumentException(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        colaborador.setContrasena(null);
+
+        // Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> colaboradorService.saveColaborador(colaborador));
+
+    }
+
+    @Test
+    @DisplayName("Guardar colaborador - datos no validos - nickname")
+    void siInvocoSaveColaboradorConNicknameNoValidaNoSeGuardaYLanzaIllegalArgumentException(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        colaborador.setNickname(null);
+
+        // Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> colaboradorService.saveColaborador(colaborador));
+
+    }
+
+    /* HU_02 */
+
+    @Test
+    @DisplayName("Buscar colaborador - datos validos")
+    void siInvocoBuscarColaboradorPorEmailYEsValidoLoRetorna(){
+        // Arrange
+        Colaborador resultado;
+        Colaborador colaborador = crearColaborador();
+        when(colaboradorRepository.findFirstByEmailAndContrasena(colaborador.getEmail(), colaborador.getContrasena())).thenReturn(java.util.Optional.of(colaborador));
+
+        // Act
+        resultado = colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena());
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(colaborador, resultado);
+
+    }
+
+    @Test
+    @DisplayName("Buscar colaborador - datos no validos - email")
+    void siInvocoBuscarColaboradorPorEmailYEmailNoEsValidoLanzaNoSuchElementException(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        colaborador.setEmail(null);
+        when(colaboradorRepository.findFirstByEmailAndContrasena(colaborador.getEmail(), colaborador.getContrasena())).thenReturn(Optional.empty());
+
+        // Act + Assert
+        assertThrows(NoSuchElementException.class,
+                () -> colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena()));
+
+    }
+
+    @Test
+    @DisplayName("Buscar colaborador - datos no validos - contrasena")
+    void siInvocoBuscarColaboradorPorEmailYContrasenaNoEsValidaLanzaNoSuchElementException(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        colaborador.setContrasena(null);
+        when(colaboradorRepository.findFirstByEmailAndContrasena(colaborador.getEmail(), colaborador.getContrasena())).thenReturn(Optional.empty());
+
+        // Act + Assert
+        assertThrows(NoSuchElementException.class,
+                () -> colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena()));
+
+    }
+
+    /* HU_05 */
+
+    @Test
+    @DisplayName("Get colaborador - Existe")
+    void siInvocoGetColaboradorYExisteLoRetorna(){
+        // Arrange
+        Colaborador resultado;
+        Colaborador colaborador = crearColaborador();
+        when(colaboradorRepository.findById(colaborador.getColaboradorID())).thenReturn(Optional.of(colaborador));
+
+        // Act
+        resultado = colaboradorService.getColaborador(colaborador.getColaboradorID());
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(colaborador, resultado);
+    }
+
+    @Test
+    @DisplayName("Get colaborador - No Existe")
+    void siInvocoGetColaboradorYNoExisteLanzaNoSuchElementException(){
+        // Arrange
+        when(colaboradorRepository.findById(0)).thenReturn(Optional.empty());
+
+        // Act + Assert
+        assertThrows(NoSuchElementException.class,
+                () -> colaboradorService.getColaborador(0));
+    }
+
+
+
    /* @Test
     @DisplayName("Buscar reputación y actualizaciones por nickname - Lista Existe")
     void siInvocoGetColaboradorRepActYExisteEntoncesRetornarListaNoVacia(){
@@ -50,6 +182,13 @@ public class ServicioColaboradorTest {
         assertNotNull(resultado);
         assertEquals(lista.size(), resultado.size());
     }*/
+
+    /* Funciones Utilidad */
+
+    private Colaborador crearColaborador(){
+        Colaborador c = new Colaborador("ex@mail.com", "password", "nick");
+        return c;
+    }
 
     /*private List<Object> cargarDatosLista() {
         Colaborador colaborador = new Colaborador(1, "marco@mail.com", "123", "Marco", 0, 0);

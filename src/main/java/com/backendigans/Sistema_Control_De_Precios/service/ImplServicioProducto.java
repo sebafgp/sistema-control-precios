@@ -24,8 +24,9 @@ public class ImplServicioProducto implements ServicioProducto {
     }
 
     @Override
-    public void saveProducto(Producto producto) {
-        productoRepository.save(producto);
+    public Producto saveProducto(Producto producto) {
+        if(producto == null) throw new IllegalArgumentException();
+        return productoRepository.save(producto);
     }
 
     @Override
@@ -40,6 +41,8 @@ public class ImplServicioProducto implements ServicioProducto {
 
     @Override
     public void colaboradorGuardaProducto(Producto producto, Colaborador colaborador) {
+        if(producto == null || colaborador == null)
+            throw new IllegalArgumentException();
         producto.addColaborador(colaborador);
         saveProducto(producto);
     }

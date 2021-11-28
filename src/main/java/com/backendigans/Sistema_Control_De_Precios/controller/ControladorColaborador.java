@@ -48,8 +48,13 @@ public class ControladorColaborador {
 
     @PostMapping("/")
     @RequestMapping(produces = "application/json", method = RequestMethod.POST)
-    public void add(@RequestBody Colaborador colaborador) {
-        colaboradorService.saveColaborador(colaborador);
+    public ResponseEntity<Colaborador> add(@RequestBody Colaborador colaborador) {
+        try {
+            colaboradorService.saveColaborador(colaborador);
+            return new ResponseEntity<>(colaborador, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e){
+            return new ResponseEntity<>(colaborador, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{colaboradorID}")
