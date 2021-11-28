@@ -34,9 +34,9 @@ public class ImplServicioColaborador implements ServicioColaborador {
 
     @Override
     public Colaborador saveColaborador(Colaborador colaborador) {
-        if (colaborador.getEmail().isEmpty()
-                || colaborador.getContrasena().isEmpty()
-                || colaborador.getNickname().isEmpty())
+        if (colaborador.getEmail() == null || colaborador.getEmail().isEmpty()
+                || colaborador.getContrasena() == null || colaborador.getContrasena().isEmpty()
+                || colaborador.getNickname() == null || colaborador.getNickname().isEmpty())
             throw new IllegalArgumentException();
         return colaboradorRepository.save(colaborador);
     }

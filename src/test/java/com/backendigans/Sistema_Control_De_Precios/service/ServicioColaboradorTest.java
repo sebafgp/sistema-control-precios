@@ -1,7 +1,6 @@
 package com.backendigans.Sistema_Control_De_Precios.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -31,7 +30,63 @@ public class ServicioColaboradorTest {
     @InjectMocks
     private ImplServicioColaborador colaboradorService;
 
+    /* HU_01 */
 
+    @Test
+    @DisplayName("Guardar colaborador - datos validos")
+    void siInvocoSaveColaboradorConDatosValidosSeGuarda(){
+        // Arrange
+        Colaborador resultado;
+        Colaborador colaborador = crearColaborador();
+        when(colaboradorRepository.save(colaborador)).thenReturn(colaborador);
+
+        // Act
+        resultado = colaboradorService.saveColaborador(colaborador);
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(colaborador, resultado);
+
+    }
+
+    @Test
+    @DisplayName("Guardar colaborador - datos no validos - email")
+    void siInvocoSaveColaboradorConEmailNoValidoNoSeGuardaYLanzaIllegalArgumentException(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        colaborador.setEmail(null);
+
+        // Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> colaboradorService.saveColaborador(colaborador));
+
+    }
+
+    @Test
+    @DisplayName("Guardar colaborador - datos no validos - contrasena")
+    void siInvocoSaveColaboradorConContrasenaNoValidaNoSeGuardaYLanzaIllegalArgumentException(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        colaborador.setContrasena(null);
+
+        // Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> colaboradorService.saveColaborador(colaborador));
+
+    }
+
+    @Test
+    @DisplayName("Guardar colaborador - datos no validos - nickname")
+    void siInvocoSaveColaboradorConNicknameNoValidaNoSeGuardaYLanzaIllegalArgumentException(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        colaborador.setNickname(null);
+
+        // Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> colaboradorService.saveColaborador(colaborador));
+
+    }
 
 
 
@@ -54,6 +109,13 @@ public class ServicioColaboradorTest {
         assertNotNull(resultado);
         assertEquals(lista.size(), resultado.size());
     }*/
+
+    /* Funciones Utilidad */
+
+    private Colaborador crearColaborador(){
+        Colaborador c = new Colaborador("ex@mail.com", "password", "nick");
+        return c;
+    }
 
     /*private List<Object> cargarDatosLista() {
         Colaborador colaborador = new Colaborador(1, "marco@mail.com", "123", "Marco", 0, 0);
