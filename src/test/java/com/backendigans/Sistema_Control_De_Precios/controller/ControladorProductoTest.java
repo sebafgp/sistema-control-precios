@@ -19,10 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +37,7 @@ public class ControladorProductoTest {
     private JacksonTester<Producto> jsonProducto;
     private JacksonTester<ControladorProducto.RequestWrapper> jsonWrapper;
     private JacksonTester<ControladorProducto.RequestWrapperActualizar> jsonWrapperActualizar;
+    private JacksonTester<ControladorProducto.puntuarProductoWrapper> jsonWrapperPuntuar;
     private MockMvc mockMvc;
     @Mock
     private ServicioProducto productoService;
@@ -328,6 +327,112 @@ public class ControladorProductoTest {
                 colaboradorService.buscarColaboradorPorEmail(datos.getEmail(), datos.getContrasena()));
     }
 
+    /* HU_04 */
+    @Test
+    @DisplayName("Puntuar producto - datos validos")
+    void siPuntuoUnProductoConDatosValidosSeActualizaCorrectamente() throws Exception {
+        //Given
+        Colaborador colaborador = crearColaborador();
+        Producto producto = crearProducto();
+        Actualizacion actualizacion = crearActualizacion();
+        ControladorProducto.puntuarProductoWrapper datos = new ControladorProducto.puntuarProductoWrapper(colaborador.getEmail(), colaborador.getContrasena(), true);
+
+        given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
+        given(productoService.getProducto(producto.getProductoID())).willReturn(producto);
+        given(actualizacionService.encontrarUltimaPorProducto(producto)).willReturn(Optional.of(actualizacion));
+
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/productos/puntuar/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapperPuntuar.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        verify(colaboradorService, times(1)).saveColaborador(colaborador);
+        verify(actualizacionService, times(1)).saveActualizacion(actualizacion);
+    }
+
+    @Test
+    @DisplayName("Puntuar producto - datos no validos - colaborador")
+    void siPuntuoUnProductoConColaboradorNoValidoNoSeActualizaYLanzaException() throws Exception {
+        //Given
+        Colaborador colaborador = null;
+        Producto producto = crearProducto();
+        Actualizacion actualizacion = crearActualizacion();
+        ControladorProducto.puntuarProductoWrapper datos = new ControladorProducto.puntuarProductoWrapper("", "", true);
+
+        doThrow(NoSuchElementException.class).when(colaboradorService).buscarColaboradorPorEmail("","");
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/productos/puntuar/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapperPuntuar.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertThrows(NoSuchElementException.class, () ->
+                colaboradorService.buscarColaboradorPorEmail(datos.getEmail(), datos.getContrasena()));
+    }
+
+    @Test
+    @DisplayName("Puntuar producto - datos no validos - producto")
+    void siPuntuoUnProductoConProductoNoValidoNoSeActualizaYLanzaException() throws Exception {
+        //Given
+        Colaborador colaborador = crearColaborador();
+        Producto producto = null;
+        Actualizacion actualizacion = crearActualizacion();
+        ControladorProducto.puntuarProductoWrapper datos = new ControladorProducto.puntuarProductoWrapper(colaborador.getEmail(), colaborador.getContrasena(), true);
+
+        given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
+        doThrow(NoSuchElementException.class).when(productoService).getProducto(1);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/productos/puntuar/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapperPuntuar.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertThrows(NoSuchElementException.class, () ->
+                productoService.getProducto(1));
+    }
+
+    @Test
+    @DisplayName("Puntuar producto - datos no validos - ultima actualizacion")
+    void siPuntuoUnProductoSinUltimaActualizacionNoSeActualiza() throws Exception {
+        //Given
+        Colaborador colaborador = crearColaborador();
+        Producto producto = crearProducto();
+        Optional<Object> actualizacion = Optional.empty();
+        ControladorProducto.puntuarProductoWrapper datos = new ControladorProducto.puntuarProductoWrapper(colaborador.getEmail(), colaborador.getContrasena(), true);
+
+        given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
+        given(productoService.getProducto(1)).willReturn(producto);
+        given(actualizacionService.encontrarUltimaPorProducto(producto)).willReturn(Optional.empty());
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/productos/puntuar/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapperPuntuar.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+
 
     /* Funciones Utilidad */
 
@@ -366,6 +471,12 @@ public class ControladorProductoTest {
     private Sucursal creaSucursal() {
         Sucursal s = new Sucursal(1, 1, "Chillan", "Collin", 111);
         return s;
+    }
+    private Actualizacion crearActualizacion(){
+        Colaborador c = crearColaborador();
+        Producto p = crearProducto();
+        Actualizacion act = new Actualizacion(c, p, 1000);
+        return act;
     }
 
 }

@@ -139,11 +139,38 @@ public class ControladorProducto {
         String contrasena;
         Boolean like;
 
-		public puntuarProductoWrapper(String email, String contrasena, Boolean like) {
+        public puntuarProductoWrapper() {
+        }
+
+        public puntuarProductoWrapper(String email, String contrasena, Boolean like) {
             this.email = email;
             this.contrasena = contrasena;
             this.like = like;
 		}
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getContrasena() {
+            return contrasena;
+        }
+
+        public void setContrasena(String contrasena) {
+            this.contrasena = contrasena;
+        }
+
+        public Boolean getLike() {
+            return like;
+        }
+
+        public void setLike(Boolean like) {
+            this.like = like;
+        }
     }
 
     @PostMapping("/puntuar/{id}")
@@ -170,9 +197,9 @@ public class ControladorProducto {
 
             servicioActualizacion.saveActualizacion(actualizacion);
 
-            return new ResponseEntity<Object>(HttpStatus.OK);
+            return new ResponseEntity<Object>(HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
 
