@@ -18,22 +18,35 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @ExtendWith(MockitoExtension.class)
 public class ControladorProductoTest {
 
     private JacksonTester<Producto> jsonProducto;
+    private JacksonTester<ControladorProducto.RequestWrapper> jsonWrapper;
     private MockMvc mockMvc;
     @Mock
     private ServicioProducto productoService;
+    @Mock
+    private ServicioColaborador colaboradorService;
+    @Mock
+    private ServicioSucursal sucursalService;
+    @Mock
+    private ServicioActualizacion actualizacionService;
     @InjectMocks
     private ControladorProducto productoController;
 
@@ -124,6 +137,111 @@ public class ControladorProductoTest {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
 
     }
+
+    /* HU_02 */
+
+    @Test
+    @DisplayName("Agregar producto - datos validos")
+    void cuandoUnColaboradorValidoAgregaUnProductoValidoSeAgregaALaBDD() throws Exception {
+
+        //Given
+        Colaborador colaborador = crearColaborador();
+        Producto producto = crearProducto();
+        Sucursal sucursal = creaSucursal();
+        ControladorProducto.RequestWrapper datos = new ControladorProducto.RequestWrapper(producto, colaborador.getEmail(), colaborador.getContrasena(), 1);
+
+        given(sucursalService.getSucursal(1)).willReturn(sucursal);
+        given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
+        given(productoService.getProducto(producto.getProductoID())).willReturn(producto);
+
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/productos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapper.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Agregar producto - datos no validos - colaborador")
+    void cuandoUnColaboradorNoValidoAgregaUnProductoValidoNoSeAgregaALaBDDYLanzaBAD_REQUEST() throws Exception {
+
+        //Given
+        Colaborador colaborador = null;
+        Producto producto = crearProducto();
+        Sucursal sucursal = creaSucursal();
+        ControladorProducto.RequestWrapper datos = new ControladorProducto.RequestWrapper(producto, "", "", 1);
+
+        doThrow(NoSuchElementException.class).when(colaboradorService).buscarColaboradorPorEmail("","");
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/productos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapper.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertThrows(NoSuchElementException.class, () ->
+                colaboradorService.buscarColaboradorPorEmail(datos.getEmail(), datos.getContrasena()));
+    }
+
+    @Test
+    @DisplayName("Agregar producto - datos no validos - producto")
+    void cuandoUnColaboradorValidoAgregaUnProductoNoValidoNoSeAgregaALaBDDYLanzaBAD_REQUEST() throws Exception {
+
+        //Given
+        Colaborador colaborador = crearColaborador();
+        Producto producto = null;
+        Sucursal sucursal = creaSucursal();
+        ControladorProducto.RequestWrapper datos = new ControladorProducto.RequestWrapper(producto, "", "", 1);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/productos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapper.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Agregar producto - datos no validos - sucursal")
+    void cuandoUnColaboradorValidoAgregaUnProductoConSucursalInvalidaNoSeAgregaALaBDDYLanzaBAD_REQUEST() throws Exception {
+
+        //Given
+        Colaborador colaborador = crearColaborador();
+        Producto producto = crearProducto();
+        Sucursal sucursal = null;
+        ControladorProducto.RequestWrapper datos = new ControladorProducto.RequestWrapper(producto, "", "", 0);
+
+        doThrow(NoSuchElementException.class).when(sucursalService).getSucursal(datos.getSucursalID());
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(post("/productos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapper.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertThrows(NoSuchElementException.class, () ->
+                sucursalService.getSucursal(datos.getSucursalID()));
+    }
+
+
     /* Funciones Utilidad */
 
     private List<Producto> cargarProductos(){
@@ -148,6 +266,19 @@ public class ControladorProductoTest {
         productos.add(p2);
 
         return productos;
+    }
+
+    private Colaborador crearColaborador(){
+        Colaborador c = new Colaborador("ex@mail.com", "password", "nick");
+        return c;
+    }
+    private  Producto crearProducto(){
+        Producto p = new Producto(1, "Tallarines", "Carozzi", 100, "g", 1000, LocalDateTime.now());
+        return p;
+    }
+    private Sucursal creaSucursal() {
+        Sucursal s = new Sucursal(1, 1, "Chillan", "Collin", 111);
+        return s;
     }
 
 }

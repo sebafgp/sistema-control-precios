@@ -143,6 +143,10 @@ public class ControladorColaboradorTest {
         Colaborador c = new Colaborador("ex@mail.com", "password", "nick");
         return c;
     }
+    private  Producto crearProducto(){
+        Producto p = new Producto(1, "Tallarines", "Carozzi", 100, "g", 1000, LocalDateTime.now());
+        return p;
+    }
 
 
 

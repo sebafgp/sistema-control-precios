@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "sucursal")
+@JsonIgnoreProperties(ignoreUnknown = true,
+        value = {"productos", "cadena"})
 public class Sucursal {
     @Id
     @Column(name = "sucursalID")
