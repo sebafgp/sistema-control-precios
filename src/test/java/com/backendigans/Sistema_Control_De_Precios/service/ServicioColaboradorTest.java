@@ -132,6 +132,35 @@ public class ServicioColaboradorTest {
 
     }
 
+    /* HU_05 */
+
+    @Test
+    @DisplayName("Get colaborador - Existe")
+    void siInvocoGetColaboradorYExisteLoRetorna(){
+        // Arrange
+        Colaborador resultado;
+        Colaborador colaborador = crearColaborador();
+        when(colaboradorRepository.findById(colaborador.getColaboradorID())).thenReturn(Optional.of(colaborador));
+
+        // Act
+        resultado = colaboradorService.getColaborador(colaborador.getColaboradorID());
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(colaborador, resultado);
+    }
+
+    @Test
+    @DisplayName("Get colaborador - No Existe")
+    void siInvocoGetColaboradorYNoExisteLanzaNoSuchElementException(){
+        // Arrange
+        when(colaboradorRepository.findById(0)).thenReturn(Optional.empty());
+
+        // Act + Assert
+        assertThrows(NoSuchElementException.class,
+                () -> colaboradorService.getColaborador(0));
+    }
+
 
 
    /* @Test

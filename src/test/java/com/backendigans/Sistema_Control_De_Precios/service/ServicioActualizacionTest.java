@@ -103,6 +103,60 @@ public class ServicioActualizacionTest {
         assertFalse(resultado.isPresent());
     }
 
+    /* HU_05 */
+    @Test
+    @DisplayName("Encontrar por colaborador - Existe y no Vacio")
+    void siInvocoEncontrarPorColaboradorYElColaboradorExisteYTieneActualizacionesRetornaUnaLista(){
+        // When
+        Colaborador colaborador = crearColaborador();
+        Actualizacion actualizacion = crearActualizacion();
+        Set<Actualizacion> set = new HashSet<>();
+        set.add(actualizacion);
+        colaborador.setActualizacion(set);
+        List<Actualizacion> listaActualizaciones = new ArrayList<>(set);
+        List<Actualizacion> resultado;
+
+        when(actualizacionService.encontrarPorColaborador(colaborador)).thenReturn(listaActualizaciones);
+
+        // Act
+        resultado = actualizacionRepository.findByColaborador(colaborador);
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(listaActualizaciones, resultado);
+    }
+
+    @Test
+    @DisplayName("Encontrar por colaborador - Existe y Vacio")
+    void siInvocoEncontrarPorColaboradorYElColaboradorExisteYNoTieneActualizacionesRetornaUnaListaVacia(){
+        // When
+        Colaborador colaborador = crearColaborador();
+        List<Actualizacion> listaActualizaciones = new ArrayList<>();
+        List<Actualizacion> resultado;
+
+        when(actualizacionService.encontrarPorColaborador(colaborador)).thenReturn(listaActualizaciones);
+
+        // Act
+        resultado = actualizacionRepository.findByColaborador(colaborador);
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(0, resultado.size());
+    }
+
+    @Test
+    @DisplayName("Encontrar por colaborador - No Existe Colaborador")
+    void siInvocoEncontrarPorColaboradorYElColaboradorNoExisteYLanzaNoSuchElementException(){
+        // When
+        Colaborador colaborador = null;
+        doThrow(NoSuchElementException.class).when(actualizacionRepository).findByColaborador(colaborador);
+
+        // Act + Assert
+        assertThrows(NoSuchElementException.class,
+                () -> actualizacionService.encontrarPorColaborador(colaborador));
+
+    }
+
     /* Funciones Utilidad */
 
     private Colaborador crearColaborador(){
