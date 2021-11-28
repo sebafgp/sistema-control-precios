@@ -81,6 +81,32 @@ public class ServicioProductoTest {
                 () -> productoService.colaboradorGuardaProducto(producto, colaborador));
     }
 
+    /* HU_03 */
+    @Test
+    @DisplayName("Save producto - producto valido")
+    void siInvocoSaveProductoYEsProductoValidoSeGuarda(){
+        Producto resultado;
+        Producto producto = crearProducto();
+        when(productoRepository.save(producto)).thenReturn(producto);
+
+        // Act
+        resultado = productoService.saveProducto(producto);
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(producto, resultado);
+        verify(productoRepository, times(1)).save(producto);
+    }
+
+    @Test
+    @DisplayName("Save producto - producto no valido")
+    void siInvocoSaveProductoYNoEsProductoValidoNoSeGuarda(){
+        Producto producto = null;
+
+        // Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> productoService.saveProducto(producto));
+    }
 
 
     /* HU_09 */

@@ -25,6 +25,7 @@ public class ImplServicioProducto implements ServicioProducto {
 
     @Override
     public Producto saveProducto(Producto producto) {
+        if(producto == null) throw new IllegalArgumentException();
         return productoRepository.save(producto);
     }
 
