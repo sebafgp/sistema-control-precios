@@ -21,23 +21,24 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ControladorProductoTest {
 
     private JacksonTester<Producto> jsonProducto;
     private JacksonTester<ControladorProducto.RequestWrapper> jsonWrapper;
+    private JacksonTester<ControladorProducto.RequestWrapperActualizar> jsonWrapperActualizar;
     private MockMvc mockMvc;
     @Mock
     private ServicioProducto productoService;
@@ -55,6 +56,8 @@ public class ControladorProductoTest {
         JacksonTester.initFields(this,new ObjectMapper());
         mockMvc = MockMvcBuilders.standaloneSetup(productoController).build();
     }
+
+    /* HU_09 */
 
     @Test
     @DisplayName("Buscar por precio - Lista Existe")
@@ -239,6 +242,90 @@ public class ControladorProductoTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertThrows(NoSuchElementException.class, () ->
                 sucursalService.getSucursal(datos.getSucursalID()));
+    }
+
+    /* HU_03 */
+
+    @Test
+    @DisplayName("Actualizar precio - datos validos")
+    void siActualizoElPrecioDeUnProductoConDatosValidosSeActualizaExitosamente() throws Exception {
+
+        //Given
+        Colaborador colaborador = crearColaborador();
+        Producto producto = crearProducto();
+        int precio = 1000;
+        ControladorProducto.RequestWrapperActualizar datos = new ControladorProducto.RequestWrapperActualizar(precio, colaborador.getEmail(), colaborador.getContrasena());
+
+        given(productoService.getProducto(producto.getProductoID())).willReturn(producto);
+        given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
+
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(put("/productos/actualizar/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapperActualizar.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        verify(productoService, times(1)).saveProducto(producto);
+        verify(colaboradorService, times(1)).saveColaborador(colaborador);
+        verify(actualizacionService, times(1)).saveActualizacion(any(Actualizacion.class));
+    }
+
+    @Test
+    @DisplayName("Actualizar precio - datos no validos - producto")
+    void siActualizoElPrecioDeUnProductoConProductoNoValidoNoSeActualiza() throws Exception {
+
+        //Given
+        Colaborador colaborador = crearColaborador();
+        Producto producto = null;
+        int precio = 1000;
+        ControladorProducto.RequestWrapperActualizar datos = new ControladorProducto.RequestWrapperActualizar(precio, "", "");
+
+        doThrow(NoSuchElementException.class).when(productoService).getProducto(1);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(put("/productos/actualizar/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapperActualizar.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertThrows(NoSuchElementException.class, () ->
+                productoService.getProducto(1));
+    }
+
+    @Test
+    @DisplayName("Actualizar precio - datos no validos - colaborador")
+    void siActualizoElPrecioDeUnProductoConColaboradorNoValidoNoSeActualiza() throws Exception {
+
+        //Given
+        Colaborador colaborador = null;
+        Producto producto = crearProducto();
+        int precio = 1000;
+        ControladorProducto.RequestWrapperActualizar datos = new ControladorProducto.RequestWrapperActualizar(precio, "", "");
+
+        given(productoService.getProducto(producto.getProductoID())).willReturn(producto);
+        doThrow(NoSuchElementException.class).when(colaboradorService).buscarColaboradorPorEmail("","");
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(put("/productos/actualizar/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapperActualizar.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertThrows(NoSuchElementException.class, () ->
+                colaboradorService.buscarColaboradorPorEmail(datos.getEmail(), datos.getContrasena()));
     }
 
 

@@ -182,9 +182,37 @@ public class ControladorProducto {
         int precio;
         String email;
         String contrasena;
+
+        public RequestWrapperActualizar() {
+        }
+
         public RequestWrapperActualizar(int precio, String email, String contrasena) {
             this.precio = precio;
             this.email = email;
+            this.contrasena = contrasena;
+        }
+
+        public int getPrecio() {
+            return precio;
+        }
+
+        public void setPrecio(int precio) {
+            this.precio = precio;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getContrasena() {
+            return contrasena;
+        }
+
+        public void setContrasena(String contrasena) {
             this.contrasena = contrasena;
         }
     }
@@ -208,9 +236,9 @@ public class ControladorProducto {
             servicioColaborador.saveColaborador(colaborador);
             servicioActualizacion.saveActualizacion(actualizacion);
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
