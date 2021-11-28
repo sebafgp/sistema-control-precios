@@ -4,10 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
@@ -85,6 +82,53 @@ public class ServicioColaboradorTest {
         // Act + Assert
         assertThrows(IllegalArgumentException.class,
                 () -> colaboradorService.saveColaborador(colaborador));
+
+    }
+
+    /* HU_02 */
+
+    @Test
+    @DisplayName("Buscar colaborador - datos validos")
+    void siInvocoBuscarColaboradorPorEmailYEsValidoLoRetorna(){
+        // Arrange
+        Colaborador resultado;
+        Colaborador colaborador = crearColaborador();
+        when(colaboradorRepository.findFirstByEmailAndContrasena(colaborador.getEmail(), colaborador.getContrasena())).thenReturn(java.util.Optional.of(colaborador));
+
+        // Act
+        resultado = colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena());
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(colaborador, resultado);
+
+    }
+
+    @Test
+    @DisplayName("Buscar colaborador - datos no validos - email")
+    void siInvocoBuscarColaboradorPorEmailYEmailNoEsValidoLanzaNoSuchElementException(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        colaborador.setEmail(null);
+        when(colaboradorRepository.findFirstByEmailAndContrasena(colaborador.getEmail(), colaborador.getContrasena())).thenReturn(Optional.empty());
+
+        // Act + Assert
+        assertThrows(NoSuchElementException.class,
+                () -> colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena()));
+
+    }
+
+    @Test
+    @DisplayName("Buscar colaborador - datos no validos - contrasena")
+    void siInvocoBuscarColaboradorPorEmailYContrasenaNoEsValidaLanzaNoSuchElementException(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        colaborador.setContrasena(null);
+        when(colaboradorRepository.findFirstByEmailAndContrasena(colaborador.getEmail(), colaborador.getContrasena())).thenReturn(Optional.empty());
+
+        // Act + Assert
+        assertThrows(NoSuchElementException.class,
+                () -> colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena()));
 
     }
 

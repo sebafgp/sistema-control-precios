@@ -9,7 +9,7 @@ public interface ServicioProducto {
 
     public List<Producto> listAllProductos();
 
-    public void saveProducto(Producto producto);
+    public Producto saveProducto(Producto producto);
 
     public Producto getProducto(Integer productoID);
 

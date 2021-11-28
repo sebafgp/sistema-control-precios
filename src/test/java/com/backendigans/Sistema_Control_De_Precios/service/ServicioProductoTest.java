@@ -19,15 +19,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,9 +35,55 @@ public class ServicioProductoTest {
 
     @Mock
     private RepositorioProducto productoRepository;
+    @Mock
+    private RepositorioColaborador colaboradorRepository;
 
     @InjectMocks
     private ImplServicioProducto productoService;
+
+    /* HU_02 */
+
+    @Test
+    @DisplayName("Colaborador guarda producto - datos validos")
+    void siColaboradorGuardaProductoYAmbosSonValidosGuardaProductoYActualizaColaborador(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        Producto producto = crearProducto();
+
+        // Act
+        productoService.colaboradorGuardaProducto(producto, colaborador);
+
+        // Assert
+        verify(productoRepository, times(1)).save(producto);
+    }
+
+    @Test
+    @DisplayName("Colaborador guarda producto - colaborador no valido")
+    void siColaboradorGuardaProductoYColaboradorNoEsValidoNoGuardaProductoYLanzaIllegalArgumentException(){
+        // Arrange
+        Colaborador colaborador = null;
+        Producto producto = crearProducto();
+
+        // Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> productoService.colaboradorGuardaProducto(producto, colaborador));
+    }
+
+    @Test
+    @DisplayName("Colaborador guarda producto - producto no valido")
+    void siColaboradorGuardaProductoYProductoNoEsValidoNoGuardaProductoYLanzaIllegalArgumentException(){
+        // Arrange
+        Colaborador colaborador = crearColaborador();
+        Producto producto = null;
+
+        // Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> productoService.colaboradorGuardaProducto(producto, colaborador));
+    }
+
+
+
+    /* HU_09 */
 
     @Test
     @DisplayName("Buscar por precio - Lista Existe")
@@ -79,8 +125,11 @@ public class ServicioProductoTest {
 
     }
 
-    @Test
 
+    /* HU_06 */
+
+    @Test
+    @DisplayName("Buscar por nombre - existen productos")
     void siBuscoPorNombreYExisteDevolverListaConProductos (){
 
         // Arrange
@@ -101,7 +150,7 @@ public class ServicioProductoTest {
     }
 
     @Test
-
+    @DisplayName("Buscar por nombre - No existen productos")
     void siBuscoPorNombreYNoExisteDevolverListaVacia (){
 
         // Arrange
@@ -145,6 +194,15 @@ public class ServicioProductoTest {
         productos.add(p2);
 
         return productos;
+    }
+
+    private Colaborador crearColaborador(){
+        Colaborador c = new Colaborador("ex@mail.com", "password", "nick");
+        return c;
+    }
+    private  Producto crearProducto(){
+        Producto p = new Producto(1, "Tallarines", "Carozzi", 100, "g", 1000, LocalDateTime.now());
+        return p;
     }
 
 }
