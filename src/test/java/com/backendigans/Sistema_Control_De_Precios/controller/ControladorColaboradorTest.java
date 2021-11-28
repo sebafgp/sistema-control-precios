@@ -1,14 +1,13 @@
 package com.backendigans.Sistema_Control_De_Precios.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
 import com.backendigans.Sistema_Control_De_Precios.model.Producto;
+import com.backendigans.Sistema_Control_De_Precios.service.ServicioActualizacion;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -44,6 +43,8 @@ public class ControladorColaboradorTest {
     private MockMvc mockMvc;
     @Mock
     private ServicioColaborador colaboradorService;
+    @Mock
+    private ServicioActualizacion actualizacionService;
     @InjectMocks
     private ControladorColaborador colaboradorController;
 
@@ -135,6 +136,49 @@ public class ControladorColaboradorTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
+    /* HU_05 */
+
+    @Test
+    @DisplayName("Obtener valoraciones - Lista No Vacia")
+    void siInvocoGetValoracionesYExistenValoracionesRetornaUnaListaNoVacia() throws Exception {
+        // Given
+        Colaborador colaborador = crearColaborador();
+        Actualizacion actualizacion = crearActualizacion();
+        List<Actualizacion> listaActualizaciones = new ArrayList<>();
+        listaActualizaciones.add(actualizacion);
+
+        given(colaboradorService.getColaborador(colaborador.getColaboradorID())).willReturn(colaborador);
+        given(actualizacionService.encontrarPorColaborador(colaborador)).willReturn(listaActualizaciones);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get("/colaborador/valoraciones/0")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Obtener valoraciones - Lista Vacia")
+    void siInvocoGetValoracionesYNoExistenValoracionesRetornaUnaListaVacia() throws Exception {
+        // Given
+        Colaborador colaborador = crearColaborador();
+
+        given(colaboradorService.getColaborador(colaborador.getColaboradorID())).willReturn(colaborador);
+        doThrow(NoSuchElementException.class).when(actualizacionService).encontrarPorColaborador(colaborador);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get("/colaborador/valoraciones/0")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
 
 
     /* Funciones Utilidad */
@@ -146,6 +190,12 @@ public class ControladorColaboradorTest {
     private  Producto crearProducto(){
         Producto p = new Producto(1, "Tallarines", "Carozzi", 100, "g", 1000, LocalDateTime.now());
         return p;
+    }
+    private Actualizacion crearActualizacion(){
+        Colaborador c = crearColaborador();
+        Producto p = crearProducto();
+        Actualizacion act = new Actualizacion(c, p, 1000);
+        return act;
     }
 
 
