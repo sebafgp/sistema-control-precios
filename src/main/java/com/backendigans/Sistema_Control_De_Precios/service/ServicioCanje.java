@@ -11,4 +11,6 @@ public interface ServicioCanje {
 
     public List<Canje> listAllCanje();
 
+    public void saveCanje(Canje canje);
+
 }

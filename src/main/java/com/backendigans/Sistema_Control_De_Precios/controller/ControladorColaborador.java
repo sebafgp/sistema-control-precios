@@ -2,16 +2,21 @@
 package com.backendigans.Sistema_Control_De_Precios.controller;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
+import com.backendigans.Sistema_Control_De_Precios.model.Canje;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
+import com.backendigans.Sistema_Control_De_Precios.model.Recompensa;
 import com.backendigans.Sistema_Control_De_Precios.model.Vista;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioActualizacion;
+import com.backendigans.Sistema_Control_De_Precios.service.ServicioCanje;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
+import com.backendigans.Sistema_Control_De_Precios.service.ServicioRecompensa;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +33,12 @@ public class ControladorColaborador {
 
     @Autowired
     ServicioActualizacion actualizacionService;
+
+    @Autowired
+    ServicioRecompensa recompensaService;
+
+    @Autowired
+    ServicioCanje canjeService;
 
     @JsonView(Vista.Colaborador.class)
     @GetMapping("")
@@ -195,5 +206,49 @@ public class ControladorColaborador {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    static public class CanjearRecompensaWrapper {
+        String email;
+        String contrasena;
+        int recompensaID;
+
+		public CanjearRecompensaWrapper(String email, String contrasena, int recompensaID) {
+            this.email = email;
+            this.contrasena = contrasena;
+            this.recompensaID = recompensaID;
+		}
+    }
+
+    @PostMapping("/canjearRecompensa")
+    public ResponseEntity<Object> canjearRecompensa(@RequestBody CanjearRecompensaWrapper datos) {
+        String email = datos.email;
+        String contrasena = datos.contrasena;
+        int recompensaID = datos.recompensaID;
+
+        try {
+            Colaborador colaborador = colaboradorService.buscarColaboradorPorEmail(email, contrasena);
+            Recompensa recompensa = recompensaService.getRecompensa(recompensaID);
+
+            if (colaborador.getPuntos()>= recompensa.getCosto()){
+                Canje canje = new Canje(colaborador, recompensa);
+                colaborador.addCanje(canje);
+                recompensa.addCanje(canje);
+                recompensa.disminuirStock(1);
+                colaborador.disminuirPuntos(recompensa.getCosto());
+
+                colaboradorService.saveColaborador(colaborador);
+                recompensaService.saveRecompensa(recompensa);
+                canjeService.saveCanje(canje);
+
+                return new ResponseEntity<>(HttpStatus.OK);
+
+            }
+            throw new NoSuchElementException();
+           
+        } catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 }
