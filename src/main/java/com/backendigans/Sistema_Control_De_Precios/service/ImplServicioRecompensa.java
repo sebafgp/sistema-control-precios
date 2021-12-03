@@ -20,7 +20,8 @@ public class ImplServicioRecompensa implements ServicioRecompensa {
 	} 
 
     @Override
-	public void saveRecompensa(Recompensa recompensa) { 
+	public void saveRecompensa(Recompensa recompensa) {
+        if(recompensa == null) throw new IllegalArgumentException();
     	recompensaRepository.save(recompensa); 
    	}
 

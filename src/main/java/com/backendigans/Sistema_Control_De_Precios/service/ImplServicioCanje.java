@@ -23,6 +23,7 @@ public class ImplServicioCanje implements ServicioCanje{
 
 	@Override
 	public void saveCanje(Canje canje) {
+		if(canje == null) throw new IllegalArgumentException();
 		canjeRepository.save(canje);
 		
 	}

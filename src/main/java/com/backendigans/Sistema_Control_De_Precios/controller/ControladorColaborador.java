@@ -10,6 +10,7 @@ import com.backendigans.Sistema_Control_De_Precios.service.ServicioActualizacion
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioCanje;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioRecompensa;
+import com.backendigans.Sistema_Control_De_Precios.exceptions.*;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -217,6 +218,33 @@ public class ControladorColaborador {
             this.contrasena = contrasena;
             this.recompensaID = recompensaID;
 		}
+
+        public CanjearRecompensaWrapper() {
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getContrasena() {
+            return contrasena;
+        }
+
+        public void setContrasena(String contrasena) {
+            this.contrasena = contrasena;
+        }
+
+        public int getRecompensaID() {
+            return recompensaID;
+        }
+
+        public void setRecompensaID(int recompensaID) {
+            this.recompensaID = recompensaID;
+        }
     }
 
     @PostMapping("/canjearRecompensa")
@@ -230,6 +258,7 @@ public class ControladorColaborador {
             Recompensa recompensa = recompensaService.getRecompensa(recompensaID);
 
             if (colaborador.getPuntos()>= recompensa.getCosto()){
+                if(!(recompensa.getStock() > 0)) throw new RecompensaSinStockException();
                 Canje canje = new Canje(colaborador, recompensa);
                 colaborador.addCanje(canje);
                 recompensa.addCanje(canje);
@@ -243,10 +272,12 @@ public class ControladorColaborador {
                 return new ResponseEntity<>(HttpStatus.OK);
 
             }
-            throw new NoSuchElementException();
+            else{
+                throw new InsuficientesPuntosException();
+            }
            
-        } catch (NoSuchElementException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (NoSuchElementException | InsuficientesPuntosException | RecompensaSinStockException e){
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
     }
 
