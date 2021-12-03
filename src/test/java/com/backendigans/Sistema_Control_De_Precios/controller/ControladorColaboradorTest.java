@@ -10,11 +10,12 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.*;
 
-import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
-import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
-import com.backendigans.Sistema_Control_De_Precios.model.Producto;
+import com.backendigans.Sistema_Control_De_Precios.model.*;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioActualizacion;
+import com.backendigans.Sistema_Control_De_Precios.service.ServicioCanje;
 import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
+import com.backendigans.Sistema_Control_De_Precios.service.ServicioRecompensa;
+import com.backendigans.Sistema_Control_De_Precios.exceptions.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -32,24 +33,29 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javassist.expr.NewArray;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class ControladorColaboradorTest {
 
     private JacksonTester<Colaborador> jsonColaborador;
+    private JacksonTester<ControladorColaborador.CanjearRecompensaWrapper> jsonCanje;
     private MockMvc mockMvc;
     @Mock
     private ServicioColaborador colaboradorService;
+    @Mock
+    private ServicioRecompensa recompensaService;
+    @Mock
+    private ServicioCanje canjeService;
     @Mock
     private ServicioActualizacion actualizacionService;
     @InjectMocks
@@ -186,6 +192,122 @@ public class ControladorColaboradorTest {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
+    /* HU_10 */
+    @Test
+    @DisplayName("Canjear Recompensa - Datos validos")
+    void siCanjeoRecompensaConDatosValidosRetornaStatusOK() throws Exception {
+        Colaborador colaborador = crearColaborador();
+        Recompensa recompensa = crearRecompensa();
+        colaborador.setPuntos(recompensa.getCosto() + 1);
+        ControladorColaborador.CanjearRecompensaWrapper datos = new ControladorColaborador.CanjearRecompensaWrapper(colaborador.getEmail(), colaborador.getContrasena(), recompensa.getRecompensaID());
+
+        given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
+        given(recompensaService.getRecompensa(recompensa.getRecompensaID())).willReturn(recompensa);
+
+        MockHttpServletResponse response = mockMvc.perform(post("/colaborador/canjearRecompensa")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonCanje.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        verify(colaboradorService, times(1)).saveColaborador(colaborador);
+        verify(recompensaService, times(1)).saveRecompensa(recompensa);
+        verify(canjeService, times(1)).saveCanje(any(Canje.class));
+    }
+
+    @Test
+    @DisplayName("Canjear Recompensa - Datos no validos - colaborador")
+    void siCanjeoRecompensaConColaboradorNoValidoLanzaNoSuchElementException() throws Exception {
+        //Colaborador colaborador = crearColaborador();
+        Recompensa recompensa = crearRecompensa();
+        //colaborador.setPuntos(recompensa.getCosto() + 1);
+        ControladorColaborador.CanjearRecompensaWrapper datos = new ControladorColaborador.CanjearRecompensaWrapper(null, null, recompensa.getRecompensaID());
+
+        doThrow(NoSuchElementException.class).when(colaboradorService).buscarColaboradorPorEmail(datos.getEmail(), datos.getContrasena());
+
+        MockHttpServletResponse response = mockMvc.perform(post("/colaborador/canjearRecompensa")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonCanje.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertThrows(NoSuchElementException.class, () ->
+                colaboradorService.buscarColaboradorPorEmail(datos.getEmail(), datos.getContrasena()));
+    }
+
+    @Test
+    @DisplayName("Canjear Recompensa - Datos no validos - recompensa")
+    void siCanjeoRecompensaConRecompensaNoValidaLanzaNoSuchElementException() throws Exception {
+        Colaborador colaborador = crearColaborador();
+        Recompensa recompensa = crearRecompensa();
+        //colaborador.setPuntos(recompensa.getCosto() + 1);
+        ControladorColaborador.CanjearRecompensaWrapper datos = new ControladorColaborador.CanjearRecompensaWrapper(colaborador.getEmail(), colaborador.getContrasena(), recompensa.getRecompensaID());
+
+        given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
+        doThrow(NoSuchElementException.class).when(recompensaService).getRecompensa(recompensa.getRecompensaID());
+
+        MockHttpServletResponse response = mockMvc.perform(post("/colaborador/canjearRecompensa")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonCanje.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertThrows(NoSuchElementException.class, () ->
+                recompensaService.getRecompensa(recompensa.getRecompensaID()));
+    }
+
+    @Test
+    @DisplayName("Canjear Recompensa - exceptions - colaborador sin puntos suficientes")
+    void siCanjeoRecompensaSinPuntosSuficientesDevuelveBadRequest() throws Exception {
+        Colaborador colaborador = crearColaborador();
+        Recompensa recompensa = crearRecompensa();
+        colaborador.setPuntos(-1);
+        ControladorColaborador.CanjearRecompensaWrapper datos = new ControladorColaborador.CanjearRecompensaWrapper(colaborador.getEmail(), colaborador.getContrasena(), recompensa.getRecompensaID());
+
+        given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
+        given(recompensaService.getRecompensa(recompensa.getRecompensaID())).willReturn(recompensa);
+
+        MockHttpServletResponse response = mockMvc.perform(post("/colaborador/canjearRecompensa")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonCanje.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Canjear Recompensa - exceptions - recompensa sin stock suficiente")
+    void siCanjeoRecompensaSinStockSuficienteDevuelveBadRequest() throws Exception {
+        Colaborador colaborador = crearColaborador();
+        Recompensa recompensa = crearRecompensa();
+        recompensa.setStock(0);
+        ControladorColaborador.CanjearRecompensaWrapper datos = new ControladorColaborador.CanjearRecompensaWrapper(colaborador.getEmail(), colaborador.getContrasena(), recompensa.getRecompensaID());
+
+        given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
+        given(recompensaService.getRecompensa(recompensa.getRecompensaID())).willReturn(recompensa);
+
+        MockHttpServletResponse response = mockMvc.perform(post("/colaborador/canjearRecompensa")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonCanje.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
 
 
     /* Funciones Utilidad */
@@ -203,6 +325,10 @@ public class ControladorColaboradorTest {
         Producto p = crearProducto();
         Actualizacion act = new Actualizacion(c, p, 1000);
         return act;
+    }
+    private Recompensa crearRecompensa() {
+        Recompensa r = new Recompensa(1, "Giftcard", 1000, 20, "Es una giftcard");
+        return r;
     }
 
 
