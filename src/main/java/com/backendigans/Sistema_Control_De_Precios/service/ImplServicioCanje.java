@@ -21,4 +21,10 @@ public class ImplServicioCanje implements ServicioCanje{
 		return canjeRepository.findAll();
 	}
 
+	@Override
+	public void saveCanje(Canje canje) {
+		canjeRepository.save(canje);
+		
+	}
+
 }

@@ -51,13 +51,13 @@ public class Colaborador {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "colaboradores")
 	private Set <Producto> productos = new HashSet<>();
 
-    @JsonView(Vista.Colaborador.class)
+   /* @JsonView(Vista.Colaborador.class)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "colaborador_recompensa",
         joinColumns = {@JoinColumn(name = "colaboradorID")},
         inverseJoinColumns = {@JoinColumn(name = "recompensaID")}
     )
-    private Set<Recompensa> recompensas = new HashSet<>();
+    private Set<Recompensa> recompensas = new HashSet<>(); */
     
     @JsonView(Vista.Colaborador.class)
     @OneToMany(mappedBy = "colaborador")
@@ -153,13 +153,13 @@ public class Colaborador {
         this.productos = productos;
     }
 
-    public Set<Recompensa> getRecompensas() {
+    /*public Set<Recompensa> getRecompensas() {
         return this.recompensas;
     }
 
     public void setRecompensas(Set<Recompensa> recompensas) {
         this.recompensas = recompensas;
-    }
+    } */
     public Set<Actualizacion> getActualizaciones() {
         return actualizaciones;
     }
@@ -174,5 +174,9 @@ public class Colaborador {
     }    
     public void addCanje(Canje canje) {
         this.canjes.add(canje);
+    }
+
+    public void disminuirPuntos(int i) {
+        this.puntos = this.puntos-i;
     }
 }

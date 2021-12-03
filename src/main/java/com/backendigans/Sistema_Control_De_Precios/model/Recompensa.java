@@ -30,10 +30,10 @@ public class Recompensa {
     private String descripcion;
 
 
-	@JsonView(Vista.Recompensa.class)
+	/* @JsonView(Vista.Recompensa.class)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "recompensas")
 	private Set<Colaborador> colaboradores = new HashSet<>();
-
+*/
     @OneToMany(mappedBy = "recompensa")
     private Set<Canje> canjes = new HashSet<>();
 
@@ -89,13 +89,13 @@ public class Recompensa {
         this.descripcion = descripcion;
     }
 
-    public Set<Colaborador> getColaboradores() {
+   /* public Set<Colaborador> getColaboradores() {
         return this.colaboradores;
     }
 
     public void setColaboradores(Set<Colaborador> colaboradores) {
         this.colaboradores = colaboradores;
-    }
+    }*/
     public Set<Canje> getCanjes() {
         return canjes;
     }
@@ -104,5 +104,9 @@ public class Recompensa {
     }    
     public void addCanje(Canje canje) {
         this.canjes.add(canje);
+    }
+
+    public void disminuirStock(int i) {
+        this.stock = this.stock-i;
     }
 }
