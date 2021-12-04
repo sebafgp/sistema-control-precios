@@ -50,6 +50,7 @@ public class ControladorColaboradorTest {
     private JacksonTester<Colaborador> jsonColaborador;
     private JacksonTester<ControladorColaborador.CanjearRecompensaWrapper> jsonCanje;
     private JacksonTester<ControladorColaborador.updateContrasenaWrapper> jsonWrapperNuevaContrasena;
+    private JacksonTester<ControladorColaborador.updateNicknameWrapper> jsonWrapperNuevoNickname;
 
     private MockMvc mockMvc;
     @Mock
@@ -369,6 +370,72 @@ public class ControladorColaboradorTest {
         MockHttpServletResponse response = mockMvc.perform(put("/colaborador/updateContrasena/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonWrapperNuevaContrasena.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+    
+    
+    @Test
+    @DisplayName("Actualizar nickname - datos validos")
+    void siActualizoNicknameConDatosValidosSeActualizaCorrectamente() throws Exception {
+        //Given
+        Colaborador colaborador = crearColaborador();
+        String nuevoNickname = "kcin";
+        ControladorColaborador.updateNicknameWrapper datos = new ControladorColaborador.updateNicknameWrapper(colaborador.getEmail(), colaborador.getNickname(), nuevoNickname);
+
+        given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getNickname())).willReturn(colaborador);
+
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(put("/colaborador/updateNickname/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapperNuevoNickname.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        verify(colaboradorService, times(1)).saveColaborador(colaborador);
+    }
+    
+    @Test
+    @DisplayName("Actualizar nickname - Colaborador no Existe ")
+    void siActualizoNicknameYNoExisteColaboradorDevuelveNotFound() throws Exception {
+        //Given
+        String nuevoNickname = "kcin";
+        ControladorColaborador.updateNicknameWrapper datos = new ControladorColaborador.updateNicknameWrapper("hola@mail.com", "1234", nuevoNickname);
+        doThrow(NoSuchElementException.class).when(colaboradorService).buscarColaboradorPorEmail("hola@mail.com","1234");
+
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(put("/colaborador/updateNickname/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapperNuevoNickname.write(datos).getJson())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+    
+    @Test
+    @DisplayName("Actualizar nickname - Nuevo nickname vacio")
+    void siActualizoNicknameYNuevoNicknameVaciaDevuelveBadRequest() throws Exception {
+        //Given
+        Colaborador colaborador = crearColaborador();
+        String nuevNickname = "";
+        ControladorColaborador.updateNicknameWrapper datos = new ControladorColaborador.updateNicknameWrapper(colaborador.getEmail(), colaborador.getNickname(), nuevNickname);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(put("/colaborador/updateNickname/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonWrapperNuevoNickname.write(datos).getJson())
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();

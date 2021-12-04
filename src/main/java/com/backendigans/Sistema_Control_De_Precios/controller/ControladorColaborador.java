@@ -211,12 +211,40 @@ public class ControladorColaborador {
         String contrasena;
         String nuevoNickname;
 
+		public updateNicknameWrapper() {
+		}
 		public updateNicknameWrapper(String email, String contrasena, String nuevoNickname) {
             this.email = email;
             this.contrasena = contrasena;
             this.nuevoNickname = nuevoNickname;
 		}
+		
+
+		public String getEmail() {
+			return this.email;
+		}
+
+		public String getContrasena() {
+			return this.contrasena;
+		}
+
+		public String getNuevoNickname() {
+			return this.nuevoNickname;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+		
+		public void setContrasena(String contrasena) {
+			this.contrasena = contrasena;
+		}
+
+		public void setNuevoNickname(String nuevoNickname) {
+			this.nuevoNickname = nuevoNickname;
+		}
     }
+		
     @PutMapping("/updateNickname")
     public ResponseEntity<?> updateNickname(@RequestBody updateNicknameWrapper datos ) {
     	String email = datos.email;
