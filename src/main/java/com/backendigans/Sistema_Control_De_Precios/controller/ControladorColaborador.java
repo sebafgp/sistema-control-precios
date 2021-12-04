@@ -155,10 +155,37 @@ public class ControladorColaborador {
         String contrasena;
         String nuevaContrasena;
 
+		public updateContrasenaWrapper() {
+		}
+
 		public updateContrasenaWrapper(String email, String contrasena, String nuevaContrasena) {
             this.email = email;
             this.contrasena = contrasena;
             this.nuevaContrasena = nuevaContrasena;
+		}
+		
+		public String getEmail() {
+			return this.email;
+		}
+
+		public String getContrasena() {
+			return this.contrasena;
+		}
+
+		public String getNuevaContrasena() {
+			return this.nuevaContrasena;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+		
+		public void setContrasena(String contrasena) {
+			this.contrasena = contrasena;
+		}
+
+		public void setNuevaContrasena(String nuevaContrasena) {
+			this.nuevaContrasena = nuevaContrasena;
 		}
     }
     @PutMapping("/updateContrasena")
