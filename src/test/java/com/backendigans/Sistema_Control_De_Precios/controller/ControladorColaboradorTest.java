@@ -529,4 +529,29 @@ public class ControladorColaboradorTest {
         map.put("actualizaciones", colaborador.getActualizaciones());
         return map;
     }
+
+     /*  HU_08   */
+     @Test
+     @DisplayName("Buscar top de colaboradores - Top Colaboradores Existe")
+     void siInvocoFindByOrderByReputacionDescYExisteAlMenosUnColaboradorEntoncesRetornarUnaListaConColaboradores(){
+
+          //Given
+
+          //When
+
+          //Then
+
+     }
+ 
+     @Test
+     @DisplayName("Buscar top de colaboradores - Top Colaboradores Existe")
+     void siInvocoFindByOrderByReputacionDescYNoExisteAlMenosUnColaboradorEntoncesRetornarUnaListaVacía(){
+
+          //Given
+
+          //When
+
+          //Then
+          
+     }
 }

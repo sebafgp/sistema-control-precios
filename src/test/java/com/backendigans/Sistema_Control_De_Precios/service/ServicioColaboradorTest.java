@@ -19,6 +19,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.data.domain.Sort;
+
 @ExtendWith(MockitoExtension.class)
 public class ServicioColaboradorTest {
 
@@ -207,5 +209,44 @@ public class ServicioColaboradorTest {
     private Colaborador crearColaborador(){
         Colaborador c = new Colaborador("ex@mail.com", "password", "nick");
         return c;
+    }
+
+    /*  HU_08   */
+    @Test
+    @DisplayName("Buscar top de colaboradores - Existe al menos un colaborador")
+    void siInvocoFindByOrderByReputacionDescYExisteAlMenosUnColaboradorEntoncesRetornarUnaListaConColaboradores(){
+
+         //Arrange
+         List <Colaborador> resultado;
+         Colaborador colaborador= crearColaborador();
+         List <Colaborador> lista= new ArrayList<>();
+         lista.add(colaborador);
+         when(colaboradorRepository.findByOrderByReputacionDesc(Sort.by(Sort.Order.desc("reputacion")))).thenReturn(lista);
+
+         //Act
+         resultado= colaboradorService.getTopColaboradores();
+
+         //Assert
+         assertNotNull(resultado);
+         assertEquals(lista.size(), resultado.size());
+
+    }
+
+    @Test
+    @DisplayName("Buscar top de colaboradores - No existen colaboradores")
+    void siInvocoFindByOrderByReputacionDescYNoExisteAlMenosUnColaboradorEntoncesRetornarUnaListaVacía(){
+
+         //Arrange
+         List <Colaborador> resultado;
+         List <Colaborador> lista= new ArrayList<>();
+         when(colaboradorRepository.findByOrderByReputacionDesc(Sort.by(Sort.Order.desc("reputacion")))).thenReturn(lista);
+
+         //Act
+         resultado= colaboradorService.getTopColaboradores();
+
+         //Assert
+         assertNotNull(resultado);
+         assertEquals(0, resultado.size());
+         
     }
 }
