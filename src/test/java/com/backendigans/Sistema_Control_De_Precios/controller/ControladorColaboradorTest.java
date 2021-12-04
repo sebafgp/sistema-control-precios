@@ -532,26 +532,43 @@ public class ControladorColaboradorTest {
 
      /*  HU_08   */
      @Test
-     @DisplayName("Buscar top de colaboradores - Top Colaboradores Existe")
-     void siInvocoFindByOrderByReputacionDescYExisteAlMenosUnColaboradorEntoncesRetornarUnaListaConColaboradores(){
+     @DisplayName("Buscar top de colaboradores - Existe al menos un colaborador")
+     void siInvocoGetTopColaboradoresYExisteAlMenosUnColaboradorEntoncesRetornarStatusOK() throws Exception{
 
           //Given
-
+         Colaborador colaborador= crearColaborador();
+         List <Colaborador> lista= new ArrayList<>();
+         lista.add(colaborador);
+         given(colaboradorService.getTopColaboradores()).willReturn(lista);
+         
           //When
+          MockHttpServletResponse response = mockMvc.perform(get("/colaborador/topColaboradores")
+             .accept(MediaType.APPLICATION_JSON))
+             .andReturn()
+             .getResponse();
 
           //Then
+          assertEquals(HttpStatus.OK.value(), response.getStatus());
 
      }
  
      @Test
-     @DisplayName("Buscar top de colaboradores - Top Colaboradores Existe")
-     void siInvocoFindByOrderByReputacionDescYNoExisteAlMenosUnColaboradorEntoncesRetornarUnaListaVacía(){
+     @DisplayName("Buscar top de colaboradores - No existen colaboradores")
+     void siInvocoGetTopColaboradoresYNoExisteAlMenosUnColaboradorEntoncesRetornarStatusNotFound() throws Exception{
 
           //Given
+    
+          List <Colaborador> lista= new ArrayList<>();
+          given(colaboradorService.getTopColaboradores()).willReturn(lista);
 
           //When
-
-          //Then
+          MockHttpServletResponse response = mockMvc.perform(get("/colaborador/topColaboradores")
+          .accept(MediaType.APPLICATION_JSON))
+          .andReturn()
+          .getResponse();
           
+          //Then
+          assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+         
      }
 }
