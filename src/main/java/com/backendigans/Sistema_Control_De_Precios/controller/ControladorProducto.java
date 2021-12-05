@@ -111,7 +111,7 @@ public class ControladorProducto {
             int sucursalID = datos.sucursalID;
             Producto producto = datos.producto;
 
-            if(producto == null || servicioProducto.getProducto(producto.getProductoID()) == null){
+            if(producto == null){
                 throw new NoSuchElementException();
             }
 

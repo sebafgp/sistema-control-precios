@@ -154,7 +154,6 @@ public class ControladorProductoTest {
 
         given(sucursalService.getSucursal(1)).willReturn(sucursal);
         given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
-        given(productoService.getProducto(producto.getProductoID())).willReturn(producto);
 
 
         // When
