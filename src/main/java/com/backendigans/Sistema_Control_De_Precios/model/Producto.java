@@ -1,17 +1,6 @@
 package com.backendigans.Sistema_Control_De_Precios.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -43,42 +32,28 @@ public class Producto {
 	private int cantidad;
 	@Column(name = "unidad")
 	private String unidad;
-	@Column(name = "precio")
-	private int precio;
 	@Column(name = "fechaActualizacion")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDateTime fechaActualizacion;
 
+	@ManyToOne
+	@JoinColumn(name = "colaboradorID" , referencedColumnName = "colaboradorID")
+	private Colaborador colaborador;
 
-	@JsonView(Vista.ProductoColaborador.class)
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "producto_colaborador",
-		joinColumns = {@JoinColumn(name = "productoID")},
-		inverseJoinColumns = {@JoinColumn(name = "colaboradorID")}
-	)
-	private Set<Colaborador> colaboradores = new HashSet<>();
+	@OneToMany (mappedBy = "producto")
+	private Inventario inventario;
 
-	@JsonView(Vista.Producto.class)
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productos")
-	private Set<Sucursal> sucursales = new HashSet<>();
-
-
-	@JsonView(Vista.Producto.class)
-    @OneToMany(mappedBy = "producto")
-    private Set<Actualizacion> actualizaciones = new HashSet<>();
-	
 	public Producto() {
 	}
 
-	public Producto(int productoID, String nombre, String marca, int cantidad, String unidad, int precio , LocalDateTime fechaActualizacion) {
+	public Producto(int productoID, String nombre, String marca, int cantidad, String unidad, LocalDateTime fechaActualizacion) {
 		this.productoID = productoID;
 		this.nombre = nombre;
 		this.marca = marca;
 		this.cantidad = cantidad;
 		this.unidad = unidad;
-		this.precio = precio;
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
@@ -96,10 +71,6 @@ public class Producto {
 	public String getUnidad() {
 		return unidad;
 	}
-
-    public int getPrecio(){
-        return precio;
-    }
 
     public LocalDateTime getFechaActualizacion(){
         return fechaActualizacion;
@@ -124,41 +95,8 @@ public class Producto {
 	public void setUnidad(String unidad) {
 		this.unidad = unidad;
 	}
-	public void setPrecio(int precio) {
-		this.precio = precio;
-	}
 	public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public Set<Sucursal> getSucursales() {
-		return this.sucursales;
-	}
-
-	public void setSucursales(Set<Sucursal> sucursales) {
-		this.sucursales = sucursales;
-	}
-
-	public Set<Colaborador> getColaboradores() {
-		return this.colaboradores;
-	}
-
-	public void setColaboradores(Set<Colaborador> colaboradores) {
-		this.colaboradores = colaboradores;
-	}
-
-    public void addColaborador(Colaborador colaborador){
-        this.colaboradores.add(colaborador);
-    }
-
-	public Set<Actualizacion> getActualizaciones() {
-		return actualizaciones;
-	}
-	public void setActualizaciones(Set<Actualizacion> actualizaciones) {
-		this.actualizaciones = actualizaciones;
-	}
-
-	public void addSucursal(Sucursal sucursal){
-		this.sucursales.add(sucursal);
-	}
 }

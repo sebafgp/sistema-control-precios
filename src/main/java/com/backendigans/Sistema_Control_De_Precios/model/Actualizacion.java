@@ -36,11 +36,10 @@ public class Actualizacion {
     @ManyToOne
     @JoinColumn(name = "colaboradorID", referencedColumnName = "colaboradorID")
     private Colaborador colaborador;
-
-    @JsonView(Vista.Actualizacion.class)
+    
     @ManyToOne
-    @JoinColumn(name = "productoID", referencedColumnName = "productoID")
-    private Producto producto;
+    @JoinColumn(name = "inventarioID", referencedColumnName = "inventarioID")
+    private Inventario inventario;
 
     private int precio;
 
@@ -51,25 +50,26 @@ public class Actualizacion {
     private int valoracion;
 
 
+
     public Actualizacion(){
 
     }
 
-    public Actualizacion (int actualizacionID, Colaborador colaborador, Producto producto, int precio, LocalDateTime fechaActualizacion, int valoracion){
+    public Actualizacion (int actualizacionID, Colaborador colaborador, Inventario inventario, int precio, LocalDateTime fechaActualizacion, int valoracion){
 
         this.actualizacionID = actualizacionID;
         this.colaborador = colaborador;
-        this.producto = producto;
+        this.inventario = inventario;
         this.precio = precio;
         this.fechaActualizacion = fechaActualizacion;
         this.valoracion = valoracion;
     }
 
-    public Actualizacion (Colaborador colaborador, Producto producto, int precio){
+    public Actualizacion (Colaborador colaborador, Inventario inventario, int precio){
 
         this.actualizacionID = 0;
         this.colaborador = colaborador;
-        this.producto = producto;
+        this.inventario = inventario;
         this.precio = precio;
         this.fechaActualizacion = LocalDateTime.now();
         this.valoracion = 0;
@@ -79,8 +79,8 @@ public class Actualizacion {
     public Colaborador getColaborador() {
         return colaborador;
     }
-    public Producto getProducto() {
-        return producto;
+    public Inventario getInventario() {
+        return inventario;
     }
     public int getPrecio() {
         return precio;
@@ -94,8 +94,8 @@ public class Actualizacion {
     public void setColaborador(Colaborador colaborador) {
         this.colaborador = colaborador;
     }
-    public void setProducto(Producto producto) {
-        this.producto = producto;
+    public void setInventario(Inventario inventario) {
+        this.inventario = inventario;
     }
     public void setPrecio(int precio) {
         this.precio = precio;
