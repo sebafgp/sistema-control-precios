@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static com.backendigans.Sistema_Control_De_Precios.utilities.FuncionesUtilidad.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -66,20 +67,18 @@ public class ServicioActualizacionTest {
     @DisplayName("Get Ultima Actualizacion - Existe")
     void siInvocoEncontrarUltimaPorProductoDevuelveUnaActualizacionValida(){
         // Arrange
-        Optional<Actualizacion> resultado;
-        Producto producto = crearProducto();
+        Actualizacion resultado;
+        Inventario inventario = crearInventario();
         Actualizacion actualizacion = crearActualizacion();
-        Set<Actualizacion> set = new HashSet<>();
-        set.add(actualizacion);
-        producto.setActualizaciones(set);
-        when(actualizacionRepository.findFirstByProductoOrderByFechaActualizacionDesc(producto)).thenReturn(Optional.of(actualizacion));
+        inventario.addActualizacion(actualizacion);
+        when(actualizacionRepository.findFirstByInventario_InventarioIDOrderByFechaActualizacionDesc(inventario.getInventarioID())).thenReturn(Optional.of(actualizacion));
 
         // Act
-        resultado = actualizacionService.encontrarUltimaPorProducto(producto);
+        resultado = actualizacionService.encontrarUltimaPorInventario(inventario);
 
         // Assert
         assertNotNull(resultado);
-        assertEquals(actualizacion, resultado.get());
+        assertEquals(actualizacion, resultado);
     }
 
     /* HU_04 */
@@ -87,20 +86,14 @@ public class ServicioActualizacionTest {
     @DisplayName("Get Ultima Actualizacion - No Existe")
     void siInvocoEncontrarUltimaPorProductoNoDevuelveUnaActualizacion(){
         // Arrange
-        Optional<Actualizacion> resultado;
-        Producto producto = crearProducto();
+        Inventario inventario = crearInventario();
         Actualizacion actualizacion = crearActualizacion();
-        Set<Actualizacion> set = new HashSet<>();
-        set.add(actualizacion);
-        producto.setActualizaciones(set);
-        when(actualizacionRepository.findFirstByProductoOrderByFechaActualizacionDesc(producto)).thenReturn(Optional.empty());
+        inventario.addActualizacion(actualizacion);
+        when(actualizacionRepository.findFirstByInventario_InventarioIDOrderByFechaActualizacionDesc(inventario.getInventarioID())).thenReturn(Optional.empty());
 
-        // Act
-        resultado = actualizacionService.encontrarUltimaPorProducto(producto);
-
-        // Assert
-        assertNotNull(resultado);
-        assertFalse(resultado.isPresent());
+        // Act + Assert
+        assertThrows(NoSuchElementException.class,
+                () -> actualizacionService.encontrarUltimaPorInventario(inventario));
     }
 
     /* HU_05 */
@@ -157,22 +150,5 @@ public class ServicioActualizacionTest {
 
     }
 
-    /* Funciones Utilidad */
-
-    private Colaborador crearColaborador(){
-        Colaborador c = new Colaborador("ex@mail.com", "password", "nick");
-        return c;
-    }
-    private  Producto crearProducto(){
-        Producto p = new Producto(1, "Tallarines", "Carozzi", 100, "g", 1000, LocalDateTime.now());
-        return p;
-    }
-
-    private Actualizacion crearActualizacion(){
-        Colaborador c = crearColaborador();
-        Producto p = crearProducto();
-        Actualizacion act = new Actualizacion(c, p, 1000);
-        return act;
-    }
 
 }

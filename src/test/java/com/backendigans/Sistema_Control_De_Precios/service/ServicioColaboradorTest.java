@@ -1,16 +1,11 @@
 package com.backendigans.Sistema_Control_De_Precios.service;
 
+import static com.backendigans.Sistema_Control_De_Precios.utilities.FuncionesUtilidad.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-
-import java.time.LocalDateTime;
 import java.util.*;
-
-import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
-import com.backendigans.Sistema_Control_De_Precios.model.Producto;
 import com.backendigans.Sistema_Control_De_Precios.repository.RepositorioColaborador;
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -176,7 +171,7 @@ public class ServicioColaboradorTest {
 
         String nickname = "nick";
 
-        when(colaboradorRepository.findFirstByNickname(nickname)).thenReturn(colaborador);
+        when(colaboradorRepository.findFirstByNickname(nickname)).thenReturn(Optional.of(colaborador));
 
         //Act
         
@@ -204,13 +199,6 @@ public class ServicioColaboradorTest {
         assertNull(resultado);
     }
 
-    /* Funciones Utilidad */
-
-    private Colaborador crearColaborador(){
-        Colaborador c = new Colaborador("ex@mail.com", "password", "nick");
-        return c;
-    }
-
     /*  HU_08   */
     @Test
     @DisplayName("Buscar top de colaboradores - Existe al menos un colaborador")
@@ -234,7 +222,7 @@ public class ServicioColaboradorTest {
 
     @Test
     @DisplayName("Buscar top de colaboradores - No existen colaboradores")
-    void siInvocoFindByOrderByReputacionDescYNoExisteAlMenosUnColaboradorEntoncesRetornarUnaListaVacía(){
+    void siInvocoFindByOrderByReputacionDescYNoExisteAlMenosUnColaboradorEntoncesRetornarUnaListaVacia(){
 
          //Arrange
          List <Colaborador> resultado;
