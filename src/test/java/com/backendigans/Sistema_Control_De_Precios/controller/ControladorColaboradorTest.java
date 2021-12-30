@@ -445,67 +445,45 @@ public class ControladorColaboradorTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
-//    //HU07
-//    @Test
-//    @DisplayName("Buscar colaborador por nickname - Colaborador existe")
-//    void siInvocoGetColaboradorByNicknameYExisteEntoncesRetornarEseColaboradorYStatusOk() throws Exception{
-//
-//        // Given
-//        Colaborador colaborador = new Colaborador(1, "marco@mail.com", "123", "Marco", 0, 10);
-//        String nickname = "Marco";
-//
-//        given(colaboradorService.getColaboradorByNickname(nickname)).willReturn(colaborador);
-//
-//        // When
-//        MockHttpServletResponse response = mockMvc.perform(get("/colaborador/reputacionYActualizacionesDeColaboradorPorNickname/Marco")
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andReturn()
-//                .getResponse();
-//
-//        // Then
-//        assertEquals(HttpStatus.OK.value(), response.getStatus());
-//    }
-//
-//    @Test
-//    @DisplayName("Buscar reputación y actualizaciones por nickname - Colaborador no existe")
-//    void siInvocoGetColaboradorByNicknameYEseNicknameNoExisteEntoncesRetornarNoSuchElementExceptionYStatusNotFound() throws Exception{
-//
-//        //Given
-//        String nickname = "Marco";
-//
-//        given(colaboradorService.getColaboradorByNickname(nickname)).willThrow(new NoSuchElementException());
-//
-//        // When
-//        MockHttpServletResponse response = mockMvc.perform(get("/colaborador/reputacionYActualizacionesDeColaboradorPorNickname/Marco")
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andReturn()
-//                .getResponse();
-//
-//        // Then
-//        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-//    }
-//
-//    private LinkedHashMap<String, Object> cargarDatosHU07() {
-//        Colaborador colaborador = new Colaborador(1, "marco@mail.com", "123", "Marco", 0, 10);
-//        Producto producto = new Producto(1, "Tallarines", "Luchetti", 1, "grs");
-//        Actualizacion actualizacion = new Actualizacion(1, colaborador, producto, 2000, LocalDateTime.parse("2021-11-24T12:00:00"), 0);
-//
-//        LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-//
-//        Set<Producto> productos = new HashSet<>();
-//        Set<Actualizacion> actualizaciones = new HashSet<>();
-//
-//        productos.add(producto);
-//        actualizaciones.add(actualizacion);
-//
-//        colaborador.setProductos(productos);
-//        colaborador.setActualizacion(actualizaciones);
-//
-//        map.put("nickname", colaborador.getNickname());
-//        map.put("reputacion", colaborador.getReputacion());
-//        map.put("actualizaciones", colaborador.getActualizaciones());
-//        return map;
-//    }
+    //HU07
+    @Test
+    @DisplayName("Buscar colaborador por nickname - Colaborador existe")
+    void siInvocoGetColaboradorByNicknameYExisteEntoncesRetornarEseColaboradorYStatusOk() throws Exception{
+
+        // Given
+        Colaborador colaborador = new Colaborador(1, "marco@mail.com", "123", "Marco", 0, 10);
+        String nickname = "Marco";
+
+        given(colaboradorService.getColaboradorByNickname(nickname)).willReturn(colaborador);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get("/colaborador/reputacionYActualizacionesDeColaboradorPorNickname/Marco")
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Buscar reputación y actualizaciones por nickname - Colaborador no existe")
+    void siInvocoGetColaboradorByNicknameYEseNicknameNoExisteEntoncesRetornarNoSuchElementExceptionYStatusNotFound() throws Exception{
+
+        //Given
+        String nickname = "Marco";
+
+        given(colaboradorService.getColaboradorByNickname(nickname)).willThrow(new NoSuchElementException());
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get("/colaborador/reputacionYActualizacionesDeColaboradorPorNickname/Marco")
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
 
      /*  HU_08   */
      @Test
