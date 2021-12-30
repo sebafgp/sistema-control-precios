@@ -64,8 +64,8 @@ public class ControladorInventario {
         }
     }
 
-    @PostMapping("/puntuar/{id}")
-    @RequestMapping(value = "/puntuar/{id}" , produces = "application/json", method = RequestMethod.POST)
+    @PostMapping("/puntuar/{inventarioID}")
+    @RequestMapping(value = "/puntuar/{inventarioID}" , produces = "application/json", method = RequestMethod.POST)
     public ResponseEntity<Object> puntuarInventario(@RequestBody puntuarProductoWrapper datos, @PathVariable Integer inventarioID){
         String email = datos.email;
         String contrasena = datos.contrasena;
@@ -131,7 +131,7 @@ public class ControladorInventario {
         }
     }
 
-    @PutMapping("/actualizar/{id}")
+    @PutMapping("/actualizar/{inventarioID}")
     public ResponseEntity<Object> actualizarPrecio(@RequestBody RequestWrapperActualizar datos, @PathVariable Integer inventarioID){
         String email = datos.email;
         String contrasena = datos.contrasena;

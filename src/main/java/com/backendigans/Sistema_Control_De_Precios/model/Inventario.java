@@ -35,6 +35,13 @@ public class Inventario {
 
     public Inventario(){}
 
+    public Inventario(int inventarioID, int precio, Sucursal sucursal, Producto producto) {
+        this.inventarioID = inventarioID;
+        this.precio = precio;
+        this.sucursal = sucursal;
+        this.producto = producto;
+    }
+
     public Inventario(int precio, Sucursal sucursal, Producto producto) {
         this.precio = precio;
         this.sucursal = sucursal;

@@ -66,6 +66,7 @@ public class ControladorInventarioTest {
         Colaborador colaborador = crearColaborador();
         Inventario inventario = crearInventario();
         int precio = 1000;
+        inventario.setPrecio(precio);
         ControladorInventario.RequestWrapperActualizar datos = new ControladorInventario.RequestWrapperActualizar(precio, colaborador.getEmail(), colaborador.getContrasena());
 
         given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
@@ -92,9 +93,11 @@ public class ControladorInventarioTest {
     void siActualizoElPrecioDeUnProductoConProductoNoValidoNoSeActualiza() throws Exception {
 
         //Given
+        Colaborador colaborador = crearColaborador();
         int precio = 1000;
-        ControladorInventario.RequestWrapperActualizar datos = new ControladorInventario.RequestWrapperActualizar(precio, "", "");
+        ControladorInventario.RequestWrapperActualizar datos = new ControladorInventario.RequestWrapperActualizar(precio, colaborador.getEmail(), colaborador.getContrasena());
 
+        given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
         doThrow(NoSuchElementException.class).when(inventarioService).buscarInventarioPorId(1);
 
         // When
@@ -108,7 +111,7 @@ public class ControladorInventarioTest {
         // Then
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertThrows(NoSuchElementException.class, () ->
-                productoService.getProducto(1));
+                inventarioService.buscarInventarioPorId(1));
     }
 
     @Test
@@ -118,9 +121,9 @@ public class ControladorInventarioTest {
         //Given
         Inventario inventario = crearInventario();
         int precio = 1000;
+        inventario.setPrecio(precio);
         ControladorInventario.RequestWrapperActualizar datos = new ControladorInventario.RequestWrapperActualizar(precio, "", "");
 
-        given(inventarioService.buscarInventarioPorId(inventario.getInventarioID())).willReturn(inventario);
         doThrow(NoSuchElementException.class).when(colaboradorService).buscarColaboradorPorEmail("","");
 
         // When
@@ -152,7 +155,7 @@ public class ControladorInventarioTest {
         given(actualizacionService.encontrarUltimaPorInventario(inventario)).willReturn(actualizacion);
 
         // When
-        MockHttpServletResponse response = mockMvc.perform(post("/productos/puntuar/1")
+        MockHttpServletResponse response = mockMvc.perform(post("/inventarios/puntuar/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonWrapperPuntuar.write(datos).getJson())
                         .accept(MediaType.APPLICATION_JSON))
@@ -160,7 +163,7 @@ public class ControladorInventarioTest {
                 .getResponse();
 
         // Then
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
         verify(colaboradorService, times(1)).saveColaborador(colaborador);
         verify(actualizacionService, times(1)).saveActualizacion(actualizacion);
     }
@@ -174,7 +177,7 @@ public class ControladorInventarioTest {
         doThrow(NoSuchElementException.class).when(colaboradorService).buscarColaboradorPorEmail("","");
 
         // When
-        MockHttpServletResponse response = mockMvc.perform(post("/productos/puntuar/1")
+        MockHttpServletResponse response = mockMvc.perform(post("/inventarios/puntuar/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonWrapperPuntuar.write(datos).getJson())
                         .accept(MediaType.APPLICATION_JSON))
@@ -198,7 +201,7 @@ public class ControladorInventarioTest {
         doThrow(NoSuchElementException.class).when(inventarioService).buscarInventarioPorId(1);
 
         // When
-        MockHttpServletResponse response = mockMvc.perform(post("/productos/puntuar/1")
+        MockHttpServletResponse response = mockMvc.perform(post("/inventarios/puntuar/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonWrapperPuntuar.write(datos).getJson())
                         .accept(MediaType.APPLICATION_JSON))
@@ -221,9 +224,10 @@ public class ControladorInventarioTest {
 
         given(colaboradorService.buscarColaboradorPorEmail(colaborador.getEmail(), colaborador.getContrasena())).willReturn(colaborador);
         given(inventarioService.buscarInventarioPorId(inventario.getInventarioID())).willReturn(inventario);
+        doThrow(NoSuchElementException.class).when(actualizacionService).encontrarUltimaPorInventario(inventario);
 
         // When
-        MockHttpServletResponse response = mockMvc.perform(post("/productos/puntuar/1")
+        MockHttpServletResponse response = mockMvc.perform(post("/inventarios/puntuar/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonWrapperPuntuar.write(datos).getJson())
                         .accept(MediaType.APPLICATION_JSON))
@@ -233,7 +237,7 @@ public class ControladorInventarioTest {
         // Then
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertThrows(NoSuchElementException.class, () ->
-                actualizacionService.encontrarUltimaPorInventario(null));
+                actualizacionService.encontrarUltimaPorInventario(inventario));
     }
 
 

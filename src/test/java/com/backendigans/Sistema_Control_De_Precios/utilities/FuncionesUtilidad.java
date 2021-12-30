@@ -25,9 +25,10 @@ public class FuncionesUtilidad {
 
     public static Inventario crearInventario() {
         int inventarioID = 1;
+        int precio = 1000;
         Sucursal sucursal = crearSucursal();
         Producto producto = crearProducto();
-        return new Inventario(inventarioID, sucursal, producto);
+        return new Inventario(inventarioID, precio, sucursal, producto);
     }
 
     public static Recompensa crearRecompensa() {
