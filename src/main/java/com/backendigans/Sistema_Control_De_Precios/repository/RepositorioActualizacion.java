@@ -10,8 +10,8 @@ import com.backendigans.Sistema_Control_De_Precios.model.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RepositorioActualizacion extends JpaRepository<Actualizacion, Integer>{
-    List<Actualizacion> findByColaborador(Colaborador colaborador); 
+    List<Actualizacion> findByColaborador(Colaborador colaborador);
 
-    Optional<Actualizacion> findFirstByProductoOrderByFechaActualizacionDesc(Producto producto);
+    Optional<Actualizacion> findFirstByInventario_InventarioIDOrderByFechaActualizacionDesc(int inventarioID);
 
 }

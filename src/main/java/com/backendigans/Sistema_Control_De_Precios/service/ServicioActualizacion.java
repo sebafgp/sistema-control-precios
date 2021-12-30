@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
+import com.backendigans.Sistema_Control_De_Precios.model.Inventario;
 
 public interface ServicioActualizacion {
 
@@ -13,4 +14,6 @@ public interface ServicioActualizacion {
     List<Actualizacion> encontrarPorColaborador(Colaborador colaborador);
 
     void saveActualizacion(Actualizacion actualizacion);
+
+    Actualizacion encontrarUltimaPorInventario(Inventario inventario);
 }

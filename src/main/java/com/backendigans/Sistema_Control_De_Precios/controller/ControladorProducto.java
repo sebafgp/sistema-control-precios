@@ -1,16 +1,9 @@
 
 package com.backendigans.Sistema_Control_De_Precios.controller;
 
-import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
-import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
-import com.backendigans.Sistema_Control_De_Precios.model.Producto;
-import com.backendigans.Sistema_Control_De_Precios.model.Sucursal;
-import com.backendigans.Sistema_Control_De_Precios.model.Vista;
-import com.backendigans.Sistema_Control_De_Precios.service.ServicioProducto;
-import com.backendigans.Sistema_Control_De_Precios.service.ServicioSucursal;
+import com.backendigans.Sistema_Control_De_Precios.model.*;
+import com.backendigans.Sistema_Control_De_Precios.service.*;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.backendigans.Sistema_Control_De_Precios.service.ServicioActualizacion;
-import com.backendigans.Sistema_Control_De_Precios.service.ServicioColaborador;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +27,8 @@ public class ControladorProducto {
     ServicioActualizacion servicioActualizacion;
     @Autowired
     ServicioSucursal servicioSucursal;
+    @Autowired
+    ServicioInventario servicioInventario;
 
     @JsonView(Vista.Producto.class)
     @GetMapping("")
@@ -46,9 +41,9 @@ public class ControladorProducto {
     public ResponseEntity<Producto> get(@PathVariable Integer id) {
         try {
             Producto producto = servicioProducto.getProducto(id);
-            return new ResponseEntity<Producto>(producto, HttpStatus.OK);
+            return new ResponseEntity<>(producto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -57,16 +52,18 @@ public class ControladorProducto {
         String email;
         String contrasena;
         int sucursalID;
+        int precio;
 
         public RequestWrapper(){
 
         }
 
-		public RequestWrapper(Producto producto, String email, String contrasena, int sucursalID) {
+		public RequestWrapper(Producto producto, String email, String contrasena, int sucursalID, int precio) {
             this.producto = producto;
             this.email = email;
             this.contrasena = contrasena;
             this.sucursalID = sucursalID;
+            this.precio = precio;
 		}
 
         public Producto getProducto() {
@@ -100,6 +97,14 @@ public class ControladorProducto {
         public void setSucursalID(int sucursalID) {
             this.sucursalID = sucursalID;
         }
+
+        public int getPrecio() {
+            return precio;
+        }
+
+        public void setPrecio(int precio) {
+            this.precio = precio;
+        }
     }
 
     @PostMapping("/")
@@ -110,162 +115,26 @@ public class ControladorProducto {
             String contrasena = datos.contrasena;
             int sucursalID = datos.sucursalID;
             Producto producto = datos.producto;
+            int precio = datos.precio;
 
             if(producto == null){
                 throw new NoSuchElementException();
             }
 
-            producto.setFechaActualizacion(LocalDateTime.now());
-
             Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
-            Actualizacion actualizacion = new Actualizacion(colaborador, producto, producto.getPrecio());
             Sucursal sucursal = servicioSucursal.getSucursal(sucursalID);
-            producto.addSucursal(sucursal);
-            sucursal.addProducto(producto);
+            Inventario inventario = new Inventario(precio, sucursal, producto);
+            inventario.setSucursal(sucursal);
+            sucursal.addInventario(inventario);
+            colaborador.addProducto(producto);
                     
             colaborador.addPuntos(1);
             servicioColaborador.saveColaborador(colaborador);
             servicioProducto.colaboradorGuardaProducto(producto, colaborador);
-            servicioActualizacion.saveActualizacion(actualizacion);
             
-            return new ResponseEntity<Object>(producto, HttpStatus.CREATED);
+            return new ResponseEntity<>(producto, HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<Object>(datos.producto, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    static public class puntuarProductoWrapper {
-        String email;
-        String contrasena;
-        Boolean like;
-
-        public puntuarProductoWrapper() {
-        }
-
-        public puntuarProductoWrapper(String email, String contrasena, Boolean like) {
-            this.email = email;
-            this.contrasena = contrasena;
-            this.like = like;
-		}
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getContrasena() {
-            return contrasena;
-        }
-
-        public void setContrasena(String contrasena) {
-            this.contrasena = contrasena;
-        }
-
-        public Boolean getLike() {
-            return like;
-        }
-
-        public void setLike(Boolean like) {
-            this.like = like;
-        }
-    }
-
-    @PostMapping("/puntuar/{id}")
-    @RequestMapping(value = "/puntuar/{id}" , produces = "application/json", method = RequestMethod.POST)
-    public ResponseEntity<Object> addProducto(@RequestBody puntuarProductoWrapper datos, @PathVariable Integer id){
-        String email = datos.email;
-        String contrasena = datos.contrasena;
-        Boolean like = datos.like;
-        try {
-            Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
-            colaborador.addPuntos(1);
-            servicioColaborador.saveColaborador(colaborador);
-
-
-            Producto producto = servicioProducto.getProducto(id);
-
-            Actualizacion actualizacion = servicioActualizacion.encontrarUltimaPorProducto(producto).get();
-
-            if (like){
-                actualizacion.addPuntos(1);
-            }else{
-                actualizacion.addPuntos(-1);
-            }
-
-            servicioActualizacion.saveActualizacion(actualizacion);
-
-            return new ResponseEntity<Object>(HttpStatus.CREATED);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-
-
-    static public class RequestWrapperActualizar {
-        int precio;
-        String email;
-        String contrasena;
-
-        public RequestWrapperActualizar() {
-        }
-
-        public RequestWrapperActualizar(int precio, String email, String contrasena) {
-            this.precio = precio;
-            this.email = email;
-            this.contrasena = contrasena;
-        }
-
-        public int getPrecio() {
-            return precio;
-        }
-
-        public void setPrecio(int precio) {
-            this.precio = precio;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getContrasena() {
-            return contrasena;
-        }
-
-        public void setContrasena(String contrasena) {
-            this.contrasena = contrasena;
-        }
-    }
-
-    @PutMapping("/actualizar/{id}")
-    public ResponseEntity<Object> actualizarPrecio(@RequestBody RequestWrapperActualizar datos, @PathVariable Integer id){
-        String email = datos.email;
-        String contrasena = datos.contrasena;
-        int precio = datos.precio;
-        try {
-            Producto producto = servicioProducto.getProducto(id);
-            producto.setPrecio(precio);
-            producto.setFechaActualizacion(LocalDateTime.now());
-
-            Colaborador colaborador = servicioColaborador.buscarColaboradorPorEmail(email, contrasena);
-            colaborador.addPuntos(1);
-            Actualizacion actualizacion = new Actualizacion(colaborador, producto, precio);
-
-
-            servicioProducto.saveProducto(producto);
-            servicioColaborador.saveColaborador(colaborador);
-            servicioActualizacion.saveActualizacion(actualizacion);
-
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(datos.producto, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -292,27 +161,28 @@ public class ControladorProducto {
         try {
             List<Producto> productos = servicioProducto.getByNombre(nombre);
             if(!productos.isEmpty()){
-                return new ResponseEntity<List<Producto>>(productos, HttpStatus.OK);
+                return new ResponseEntity<>(productos, HttpStatus.OK);
             }else{
                 throw new NoSuchElementException();
             }
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<List<Producto>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
+
     @JsonView(Vista.Producto.class)
     @GetMapping("/buscarPorPrecio/{precio}")
     public ResponseEntity<List<Producto>> buscarPorPrecio(@PathVariable Integer precio){
         try{
-            List<Producto> productos = servicioProducto.getProductoPorPrecio(precio);
+            List<Inventario> inventarios = servicioInventario.getInventariosPorPrecio(precio);
+            List<Producto> productos = servicioProducto.getProductosDeInventarios(inventarios);
             if(!productos.isEmpty()){
-                return new ResponseEntity<List<Producto>>(productos, HttpStatus.OK);
+                return new ResponseEntity<>(productos, HttpStatus.OK);
             }else{
                 throw new NoSuchElementException();
             }
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<List<Producto>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

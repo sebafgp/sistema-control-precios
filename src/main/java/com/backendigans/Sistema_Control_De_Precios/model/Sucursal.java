@@ -31,7 +31,7 @@ public class Sucursal {
     private Cadena cadena;
 
     @OneToMany(mappedBy = "sucursal")
-    private Inventario inventario;
+    private Set<Inventario> inventarios = new HashSet<>();
 
     public Sucursal(){
 
@@ -82,6 +82,10 @@ public class Sucursal {
 
     public void setCadena(Cadena cadena) {
         this.cadena = cadena;
+    }
+
+    public boolean addInventario(Inventario inventario){
+        return inventarios.add(inventario);
     }
 
 }

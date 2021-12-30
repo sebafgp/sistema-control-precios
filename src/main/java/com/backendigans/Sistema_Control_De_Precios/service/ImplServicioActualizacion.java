@@ -1,12 +1,14 @@
 package com.backendigans.Sistema_Control_De_Precios.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
+import com.backendigans.Sistema_Control_De_Precios.model.Inventario;
 import com.backendigans.Sistema_Control_De_Precios.model.Producto;
 import com.backendigans.Sistema_Control_De_Precios.repository.RepositorioActualizacion;
 
@@ -33,6 +35,11 @@ public class ImplServicioActualizacion implements ServicioActualizacion{
     @Override
     public void saveActualizacion(Actualizacion actualizacion) {
         actualizacionRepository.save(actualizacion);
+    }
+
+    @Override
+    public Actualizacion encontrarUltimaPorInventario(Inventario inventario) {
+        return actualizacionRepository.findFirstByInventario_InventarioIDOrderByFechaActualizacionDesc(inventario.getInventarioID()).get();
     }
 
 }

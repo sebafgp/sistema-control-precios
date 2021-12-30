@@ -32,11 +32,6 @@ public class Producto {
 	private int cantidad;
 	@Column(name = "unidad")
 	private String unidad;
-	@Column(name = "fechaActualizacion")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	private LocalDateTime fechaActualizacion;
 
 	@ManyToOne
 	@JoinColumn(name = "colaboradorID" , referencedColumnName = "colaboradorID")
@@ -48,13 +43,12 @@ public class Producto {
 	public Producto() {
 	}
 
-	public Producto(int productoID, String nombre, String marca, int cantidad, String unidad, LocalDateTime fechaActualizacion) {
+	public Producto(int productoID, String nombre, String marca, int cantidad, String unidad) {
 		this.productoID = productoID;
 		this.nombre = nombre;
 		this.marca = marca;
 		this.cantidad = cantidad;
 		this.unidad = unidad;
-		this.fechaActualizacion = fechaActualizacion;
 	}
 
     public String getNombre(){
@@ -71,10 +65,6 @@ public class Producto {
 	public String getUnidad() {
 		return unidad;
 	}
-
-    public LocalDateTime getFechaActualizacion(){
-        return fechaActualizacion;
-    }
 
 	public int getProductoID() {
 		return this.productoID;
@@ -94,9 +84,6 @@ public class Producto {
 	}
 	public void setUnidad(String unidad) {
 		this.unidad = unidad;
-	}
-	public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
 	}
 
 	public void setColaborador(Colaborador colaborador) {

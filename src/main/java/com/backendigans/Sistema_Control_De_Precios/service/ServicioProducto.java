@@ -3,6 +3,7 @@ package com.backendigans.Sistema_Control_De_Precios.service;
 import java.util.List;
 
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
+import com.backendigans.Sistema_Control_De_Precios.model.Inventario;
 import com.backendigans.Sistema_Control_De_Precios.model.Producto;
 
 public interface ServicioProducto {
@@ -19,4 +20,5 @@ public interface ServicioProducto {
 
     List<Producto> getByNombre(String nombre);
 
+    List<Producto> getProductosDeInventarios(List<Inventario> inventarios);
 }

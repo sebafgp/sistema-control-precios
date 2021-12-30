@@ -48,7 +48,7 @@ public class Colaborador {
     private int reputacion;
 
     @JsonView(Vista.Colaborador.class)
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "colaboradores")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "colaborador")
 	private Set <Producto> productos = new HashSet<>();
 
    /* @JsonView(Vista.Colaborador.class)
@@ -178,5 +178,9 @@ public class Colaborador {
 
     public void disminuirPuntos(int i) {
         this.puntos = this.puntos-i;
+    }
+
+    public boolean addProducto(Producto producto){
+        return productos.add(producto);
     }
 }

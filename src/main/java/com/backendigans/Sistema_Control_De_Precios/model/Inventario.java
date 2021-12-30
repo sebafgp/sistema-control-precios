@@ -49,6 +49,10 @@ public class Inventario {
         return precio;
     }
 
+    public void setPrecio(int precio) {
+        this.precio = precio;
+    }
+
     public Sucursal getSucursal() {
         return sucursal;
     }
@@ -63,5 +67,9 @@ public class Inventario {
 
     public boolean addActualizacion(Actualizacion actualizacion){
         return actualizaciones.add(actualizacion);
+    }
+
+    public void setSucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
     }
 }

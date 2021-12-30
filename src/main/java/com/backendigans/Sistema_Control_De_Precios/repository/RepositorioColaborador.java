@@ -15,6 +15,6 @@ public interface RepositorioColaborador extends JpaRepository<Colaborador, Integ
     
     List<Colaborador> findByOrderByReputacionDesc(Sort sort);
 
-    Colaborador findFirstByNickname(String nickname);
+    Optional<Colaborador> findFirstByNickname(String nickname);
 
 }  
