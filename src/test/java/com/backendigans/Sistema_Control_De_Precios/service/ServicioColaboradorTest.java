@@ -187,16 +187,13 @@ public class ServicioColaboradorTest {
     void siInvocoGetColaboradorByNicknameYEsteNoExisteEntoncesRetornarNull(){
 
         // Arrange
-        Colaborador resultado;
         String nickname = "nick";
 
-        when(colaboradorRepository.findFirstByNickname(nickname)).thenReturn(null);
+        when(colaboradorRepository.findFirstByNickname(nickname)).thenThrow(NoSuchElementException.class);
 
-        //Act
-        resultado = colaboradorService.getColaboradorByNickname(nickname);
-
-        //Assert
-        assertNull(resultado);
+        // Act + Assert
+        assertThrows(NoSuchElementException.class,
+                () -> colaboradorService.getColaboradorByNickname(nickname));
     }
 
     /*  HU_08   */

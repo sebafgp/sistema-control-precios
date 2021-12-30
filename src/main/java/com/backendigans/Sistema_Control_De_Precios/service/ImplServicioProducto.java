@@ -43,6 +43,7 @@ public class ImplServicioProducto implements ServicioProducto {
 
     @Override
     public void colaboradorGuardaProducto(Producto producto, Colaborador colaborador) {
+        if(producto == null || colaborador == null) throw new IllegalArgumentException();
         producto.setColaborador(colaborador);
         saveProducto(producto);
     }

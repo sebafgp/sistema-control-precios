@@ -34,6 +34,7 @@ public class ImplServicioActualizacion implements ServicioActualizacion{
 
     @Override
     public void saveActualizacion(Actualizacion actualizacion) {
+        if(actualizacion == null) throw new IllegalArgumentException();
         actualizacionRepository.save(actualizacion);
     }
 
