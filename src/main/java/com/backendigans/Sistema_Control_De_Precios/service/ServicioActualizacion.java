@@ -16,4 +16,6 @@ public interface ServicioActualizacion {
     void saveActualizacion(Actualizacion actualizacion);
 
     Actualizacion encontrarUltimaPorInventario(Inventario inventario);
+
+    List<Actualizacion> listarTodasLasActualizacionesDeInventario(Inventario inventario);
 }

@@ -43,4 +43,9 @@ public class ImplServicioActualizacion implements ServicioActualizacion{
         return actualizacionRepository.findFirstByInventario_InventarioIDOrderByFechaActualizacionDesc(inventario.getInventarioID()).get();
     }
 
+    @Override
+    public List<Actualizacion> listarTodasLasActualizacionesDeInventario(Inventario inventario) {
+        return actualizacionRepository.findByInventario(inventario);
+    }
+
 }

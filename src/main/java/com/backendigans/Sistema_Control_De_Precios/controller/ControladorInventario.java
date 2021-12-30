@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -154,6 +155,52 @@ public class ControladorInventario {
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public static class RequestWrapperHistorial{
+        Sucursal sucursal;
+        Producto producto;
+
+        public RequestWrapperHistorial() {
+        }
+
+        public RequestWrapperHistorial(Sucursal sucursal, Producto producto) {
+            this.sucursal = sucursal;
+            this.producto = producto;
+        }
+
+        public Sucursal getSucursal() {
+            return sucursal;
+        }
+
+        public void setSucursal(Sucursal sucursal) {
+            this.sucursal = sucursal;
+        }
+
+        public Producto getProducto() {
+            return producto;
+        }
+
+        public void setProducto(Producto producto) {
+            this.producto = producto;
+        }
+    }
+
+    @GetMapping("/historial")
+    public ResponseEntity<Object> historialDePrecios(@RequestBody RequestWrapperHistorial datos){
+
+        Sucursal sucursal = datos.sucursal;
+        Producto producto = datos.producto;
+
+        try {
+            Inventario inventario = servicioInventario.buscarInventarioPorProductoYSucursal(producto, sucursal);
+            List<Actualizacion> actualizaciones = servicioActualizacion.listarTodasLasActualizacionesDeInventario(inventario);
+            if(actualizaciones.isEmpty()) throw new NoSuchElementException();
+            return new ResponseEntity<>(actualizaciones, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
 
