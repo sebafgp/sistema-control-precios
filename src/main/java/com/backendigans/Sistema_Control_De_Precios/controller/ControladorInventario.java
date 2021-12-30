@@ -146,7 +146,6 @@ public class ControladorInventario {
             Actualizacion actualizacion = new Actualizacion(colaborador, inventario, precio);
             inventario.addActualizacion(actualizacion);
 
-
             servicioInventario.saveInventario(inventario);
             servicioColaborador.saveColaborador(colaborador);
             servicioActualizacion.saveActualizacion(actualizacion);
