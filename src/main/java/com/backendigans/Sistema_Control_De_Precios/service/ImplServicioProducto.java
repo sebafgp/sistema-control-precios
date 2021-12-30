@@ -31,7 +31,7 @@ public class ImplServicioProducto implements ServicioProducto {
 
     @Override
     public Producto getProducto(Integer productoID) {
-        return productoRepository.findById(productoID).get();
+        return productoRepository.findById(productoID).orElse(null);
     }
 
     @Override
@@ -41,22 +41,13 @@ public class ImplServicioProducto implements ServicioProducto {
 
     @Override
     public void colaboradorGuardaProducto(Producto producto, Colaborador colaborador) {
-        if(producto == null || colaborador == null)
-            throw new IllegalArgumentException();
-        producto.addColaborador(colaborador);
+        producto.setColaborador(colaborador);
         saveProducto(producto);
     }
 
     @Override
     public List<Producto> getByNombre(String nombre) {
-        // TODO Auto-generated method stub
         return productoRepository.findByNombre(nombre);
     }
 
-    @Override
-    public List<Producto> getProductoPorPrecio(Integer precio){
-        List<Producto> productos;
-        productos = productoRepository.findByPrecioLessThanEqual(precio);
-        return productos;
-    }
 }

@@ -7,17 +7,16 @@ import com.backendigans.Sistema_Control_De_Precios.model.Producto;
 
 public interface ServicioProducto {
 
-    public List<Producto> listAllProductos();
+    List<Producto> listAllProductos();
 
-    public Producto saveProducto(Producto producto);
+    Producto saveProducto(Producto producto);
 
-    public Producto getProducto(Integer productoID);
+    Producto getProducto(Integer productoID);
 
-    public void deleteProducto(Integer productoID);
+    void deleteProducto(Integer productoID);
 
-    public void colaboradorGuardaProducto(Producto producto, Colaborador colaborador);
+    void colaboradorGuardaProducto(Producto producto, Colaborador colaborador);
 
-    public List<Producto> getByNombre(String nombre);
+    List<Producto> getByNombre(String nombre);
 
-    public List<Producto> getProductoPorPrecio(Integer precio);
 }

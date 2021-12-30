@@ -99,4 +99,11 @@ public class Producto {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public void setColaborador(Colaborador colaborador) {
+		this.colaborador = colaborador;
+	}
+
+	public void setInventario(Inventario inventario) {
+		this.inventario = inventario;
+	}
 }

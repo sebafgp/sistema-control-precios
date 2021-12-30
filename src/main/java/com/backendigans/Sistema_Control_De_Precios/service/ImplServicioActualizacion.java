@@ -31,13 +31,7 @@ public class ImplServicioActualizacion implements ServicioActualizacion{
     }
 
     @Override
-    public Optional<Actualizacion> encontrarUltimaPorProducto(Producto producto) {
-        return actualizacionRepository.findFirstByProductoOrderByFechaActualizacionDesc(producto);
-    }
-
-    @Override
     public void saveActualizacion(Actualizacion actualizacion) {
-        if(actualizacion == null) throw new IllegalArgumentException();
         actualizacionRepository.save(actualizacion);
     }
 
