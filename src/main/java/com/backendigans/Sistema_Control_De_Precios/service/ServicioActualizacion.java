@@ -18,4 +18,8 @@ public interface ServicioActualizacion {
     Actualizacion encontrarUltimaPorInventario(Inventario inventario);
 
     List<Actualizacion> listarTodasLasActualizacionesDeInventario(Inventario inventario);
+
+    Actualizacion encontrarPorId(int actualizacionId);
+
+    boolean agregarComentario(String comentario, Actualizacion actualizacion);
 }

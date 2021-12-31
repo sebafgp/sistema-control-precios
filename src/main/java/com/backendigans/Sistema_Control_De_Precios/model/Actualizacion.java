@@ -1,6 +1,7 @@
 package com.backendigans.Sistema_Control_De_Precios.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,6 +50,7 @@ public class Actualizacion {
     private Inventario inventario;
 
     private int precio;
+    private List<String> comentarios = new ArrayList<>();
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -95,6 +97,11 @@ public class Actualizacion {
     public int getPrecio() {
         return precio;
     }
+
+    public int getActualizacionID() {
+        return actualizacionID;
+    }
+
     public int getValoracion() {
         return valoracion;
     }
@@ -117,5 +124,9 @@ public class Actualizacion {
 	public void addPuntos(int i) {
         this.valoracion = this.valoracion + i;
 	}
+
+    public boolean agregarComentario(String comentario){
+        return comentarios.add(comentario);
+    }
 
 }

@@ -17,8 +17,6 @@ public interface RepositorioActualizacion extends JpaRepository<Actualizacion, I
 
     List<Actualizacion> findByInventario(Inventario inventario);
 
-
-
-
+    Optional<Actualizacion> findByActualizacionID(int actualizacionID);
 
 }

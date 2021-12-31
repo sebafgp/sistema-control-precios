@@ -48,4 +48,14 @@ public class ImplServicioActualizacion implements ServicioActualizacion{
         return actualizacionRepository.findByInventario(inventario);
     }
 
+    @Override
+    public Actualizacion encontrarPorId(int actualizacionId) {
+        return actualizacionRepository.findByActualizacionID(actualizacionId).get();
+    }
+
+    @Override
+    public boolean agregarComentario(String comentario, Actualizacion actualizacion) {
+        return actualizacion.agregarComentario(comentario);
+    }
+
 }
