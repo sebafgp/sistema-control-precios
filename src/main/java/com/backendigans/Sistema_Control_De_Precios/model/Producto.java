@@ -38,7 +38,7 @@ public class Producto {
 	private Colaborador colaborador;
 
 	@OneToMany (mappedBy = "producto")
-	private Inventario inventario;
+	private List<Inventario> inventarios;
 
 	public Producto() {
 	}
@@ -90,7 +90,11 @@ public class Producto {
 		this.colaborador = colaborador;
 	}
 
-	public void setInventario(Inventario inventario) {
-		this.inventario = inventario;
+	public void setInventarios(List<Inventario> inventarios) {
+		this.inventarios = inventarios;
+	}
+
+	public boolean addInventario(Inventario inventario){
+		return inventarios.add(inventario);
 	}
 }

@@ -59,7 +59,7 @@ public class Colaborador {
     )
     private Set<Recompensa> recompensas = new HashSet<>(); */
     
-    @JsonView(Vista.Colaborador.class)
+    @JsonIgnore
     @OneToMany(mappedBy = "colaborador")
     private Set<Actualizacion> actualizaciones = new HashSet<>();
 
