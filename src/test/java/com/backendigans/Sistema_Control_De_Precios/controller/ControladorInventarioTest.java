@@ -1,7 +1,8 @@
 package com.backendigans.Sistema_Control_De_Precios.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import com.backendigans.Sistema_Control_De_Precios.model.*;
 import com.backendigans.Sistema_Control_De_Precios.service.*;
@@ -13,7 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,10 +36,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @ExtendWith(MockitoExtension.class)
+//@MockitoSettings(strictness = Strictness.LENIENT)
 public class ControladorInventarioTest {
     private JacksonTester<Producto> jsonProducto;
     private JacksonTester<ControladorInventario.RequestWrapperActualizar> jsonWrapperActualizar;
     private JacksonTester<ControladorInventario.puntuarProductoWrapper> jsonWrapperPuntuar;
+    private JacksonTester<ControladorInventario.RequestWrapperHistorial> jsonWrapperHistorial;
     private MockMvc mockMvc;
     @Mock
     private ServicioProducto productoService;
@@ -238,6 +244,127 @@ public class ControladorInventarioTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertThrows(NoSuchElementException.class, () ->
                 actualizacionService.encontrarUltimaPorInventario(inventario));
+    }
+
+    /* HU_14 */
+
+    @Test
+    @DisplayName("Buscar historial precios - datos validos")
+    void siInvocoHistorialDePreciosConDatosValidosRetornaListaNoVacia() throws Exception{
+        //Given
+        Inventario inventario = crearInventario();
+        Actualizacion actualizacion = crearActualizacion();
+        actualizacion.setPrecio(2500);
+        actualizacion.setInventario(inventario);
+        inventario.addActualizacion(actualizacion);
+        List<Actualizacion> actualizaciones = new ArrayList<>();
+        actualizaciones.add(actualizacion);
+
+        given(sucursalService.getSucursal(inventario.getSucursal().getSucursalID())).willReturn(inventario.getSucursal());
+        given(productoService.getProducto(inventario.getProducto().getProductoID())).willReturn(inventario.getProducto());
+        given(inventarioService.buscarInventarioPorProductoYSucursal(inventario.getProducto(), inventario.getSucursal())).willReturn(inventario);
+        given(actualizacionService.listarTodasLasActualizacionesDeInventario(inventario)).willReturn(actualizaciones);
+
+        String url = String.format("/inventarios/historial/%d/%d", inventario.getSucursal().getSucursalID(), inventario.getProducto().getProductoID());
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get(url)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Buscar historial precios - datos validos - lista vacia")
+    void siInvocoHistorialDePreciosConDatosValidosYNoExistenRetornaListaVacia() throws Exception{
+        //Given
+        Inventario inventario = crearInventario();
+        Actualizacion actualizacion = crearActualizacion();
+        actualizacion.setPrecio(2500);
+        actualizacion.setInventario(inventario);
+        inventario.addActualizacion(actualizacion);
+        List<Actualizacion> actualizaciones = new ArrayList<>();
+
+        given(sucursalService.getSucursal(inventario.getSucursal().getSucursalID())).willReturn(inventario.getSucursal());
+        given(productoService.getProducto(inventario.getProducto().getProductoID())).willReturn(inventario.getProducto());
+        given(inventarioService.buscarInventarioPorProductoYSucursal(inventario.getProducto(), inventario.getSucursal())).willReturn(inventario);
+        given(actualizacionService.listarTodasLasActualizacionesDeInventario(inventario)).willReturn(actualizaciones);
+
+        String url = String.format("/inventarios/historial/%d/%d", inventario.getSucursal().getSucursalID(), inventario.getProducto().getProductoID());
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get(url)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Buscar historial precios - datos no validos - sucursal")
+    void siInvocoHistorialDePreciosConSucursalNoValidaRetornaNotFound() throws Exception{
+        //Given
+        Inventario inventario = crearInventario();
+
+        doThrow(NoSuchElementException.class).when(sucursalService).getSucursal(0);
+
+        String url = String.format("/inventarios/historial/%d/%d", 0, inventario.getProducto().getProductoID());
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get(url)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+    @Test
+    @DisplayName("Buscar historial precios - datos no validos - producto")
+    void siInvocoHistorialDePreciosConProductoNoValidoRetornaNotFound() throws Exception{
+        //Given
+        Inventario inventario = crearInventario();
+
+        given(sucursalService.getSucursal(inventario.getSucursal().getSucursalID())).willReturn(inventario.getSucursal());
+        doThrow(NoSuchElementException.class).when(productoService).getProducto(0);
+
+        String url = String.format("/inventarios/historial/%d/%d", inventario.getSucursal().getSucursalID(), 0);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get(url)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Buscar historial precios - datos no validos - inventario")
+    void siInvocoHistorialDePreciosConInventarioNoValidoRetornaNotFound() throws Exception{
+        //Given
+        Inventario inventario = crearInventario();
+
+        given(sucursalService.getSucursal(inventario.getSucursal().getSucursalID())).willReturn(inventario.getSucursal());
+        given(productoService.getProducto(inventario.getProducto().getProductoID())).willReturn(inventario.getProducto());
+        doThrow(NoSuchElementException.class).when(inventarioService).buscarInventarioPorProductoYSucursal(inventario.getProducto(), inventario.getSucursal());
+
+        String url = String.format("/inventarios/historial/%d/%d", inventario.getSucursal().getSucursalID(), inventario.getProducto().getProductoID());
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get(url)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
 

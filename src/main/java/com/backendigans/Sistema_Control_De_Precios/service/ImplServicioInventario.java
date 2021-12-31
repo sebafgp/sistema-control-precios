@@ -21,7 +21,7 @@ public class ImplServicioInventario implements ServicioInventario{
 
     @Override
     public Inventario buscarInventarioPorProductoYSucursal(Producto producto, Sucursal sucursal){
-        return inventarioRepository.findBySucursal_SucursalIDAndProducto_ProductoID(sucursal.getSucursalID(), producto.getProductoID()).get();
+        return inventarioRepository.findBySucursalAndProducto(sucursal, producto).get();
     }
 
     @Override

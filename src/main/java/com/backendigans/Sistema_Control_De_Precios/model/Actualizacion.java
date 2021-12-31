@@ -19,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -41,7 +42,8 @@ public class Actualizacion {
     @ManyToOne
     @JoinColumn(name = "colaboradorID", referencedColumnName = "colaboradorID")
     private Colaborador colaborador;
-    
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "inventarioID", referencedColumnName = "inventarioID")
     private Inventario inventario;

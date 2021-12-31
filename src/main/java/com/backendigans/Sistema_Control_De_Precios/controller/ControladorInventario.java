@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -186,13 +187,11 @@ public class ControladorInventario {
         }
     }
 
-    @GetMapping("/historial")
-    public ResponseEntity<Object> historialDePrecios(@RequestBody RequestWrapperHistorial datos){
-
-        Sucursal sucursal = datos.sucursal;
-        Producto producto = datos.producto;
-
+    @GetMapping("/historial/{sucursalID}/{productoID}")
+    public ResponseEntity<Object> historialDePrecios(@PathVariable Integer sucursalID, @PathVariable Integer productoID){
         try {
+            Sucursal sucursal = servicioSucursal.getSucursal(sucursalID);
+            Producto producto = servicioProducto.getProducto(productoID);
             Inventario inventario = servicioInventario.buscarInventarioPorProductoYSucursal(producto, sucursal);
             List<Actualizacion> actualizaciones = servicioActualizacion.listarTodasLasActualizacionesDeInventario(inventario);
             if(actualizaciones.isEmpty()) throw new NoSuchElementException();
