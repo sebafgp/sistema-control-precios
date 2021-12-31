@@ -13,4 +13,6 @@ public interface ServicioCadena {
     public Cadena getCadena(Integer cadenaID);
 
     public void deleteCadena(Integer cadenaID);
+
+    public Cadena buscarCadenaPorNombre(String nombre);
 }

@@ -33,4 +33,9 @@ public class ImplServicioCadena implements ServicioCadena{
     public void deleteCadena(Integer cadenaID) {
         cadenaRepository.deleteById(cadenaID);
     }
+
+    @Override
+    public Cadena buscarCadenaPorNombre(String nombre) {
+        return cadenaRepository.findByNombre(nombre).orElse(null);
+    }
 }
