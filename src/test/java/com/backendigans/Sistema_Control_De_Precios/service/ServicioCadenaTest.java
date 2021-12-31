@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.Null;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.data.domain.Sort;
@@ -49,18 +50,20 @@ public class ServicioCadenaTest {
         assertEquals(cadena, resultado);
     }
 
-    /*@Test
+    @Test
     @DisplayName("Existe una cadena dado su nombre - No existe")
     void siInvocoExisteCadenaPorNombreYNoExisteRetornarNull(){
         // Arrange
-        Cadena resultado;
+        //Cadena resultado;
 
         when(cadenaRepository.findByNombre("Unimarc")).thenReturn(null);
 
         // Act
-        resultado = cadenaService.buscarCadenaPorNombre("Unimarc");
+        //resultado = cadenaService.buscarCadenaPorNombre("Unimarc");
 
         // Assert
-        assertNull(resultado);
-    }*/
+        //assertNull(resultado);
+        assertThrows(NullPointerException.class,
+        () -> cadenaService.buscarCadenaPorNombre("Unimarc"));
+    }
 }

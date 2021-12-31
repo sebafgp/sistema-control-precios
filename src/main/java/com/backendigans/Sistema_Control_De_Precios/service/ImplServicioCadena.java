@@ -36,6 +36,6 @@ public class ImplServicioCadena implements ServicioCadena{
 
     @Override
     public Cadena buscarCadenaPorNombre(String nombre) {
-        return cadenaRepository.findByNombre(nombre).get();
+        return cadenaRepository.findByNombre(nombre).orElse(null);
     }
 }
