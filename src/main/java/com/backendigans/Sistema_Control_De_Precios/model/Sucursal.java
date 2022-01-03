@@ -43,7 +43,14 @@ public class Sucursal {
         this.calle = calle;
         this.numero = numero;
     }
- 
+
+    public Sucursal(String ciudad, String calle, int numero, Cadena cadena) {
+        this.ciudad = ciudad;
+        this.calle = calle;
+        this.numero = numero;
+        this.cadena = cadena;
+    }
+
     public int getSucursalID() {
         return this.sucursalID;
     }

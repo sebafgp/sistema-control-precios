@@ -31,6 +31,12 @@ public class FuncionesUtilidad {
         return new Inventario(inventarioID, precio, sucursal, producto);
     }
 
+    public static Cadena crearCadena(){
+        int id = 99;
+        String nombre = "Cadena de prueba";
+        return new Cadena(id, nombre);
+    }
+
     public static Recompensa crearRecompensa() {
         return new Recompensa(1, "Giftcard", 1000, 20, "Es una giftcard");
     }
