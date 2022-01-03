@@ -21,6 +21,8 @@ import java.util.NoSuchElementException;
 public class ControladorCadena {
     @Autowired
     ServicioCadena servicioCadena;
+
+    @Autowired
     ServicioColaborador servicioColaborador;
 
     @JsonView(Vista.Cadena.class)
@@ -112,7 +114,7 @@ public class ControladorCadena {
                 cadena = new Cadena();
                 cadena.setNombre(nombreCadena);
                 servicioCadena.saveCadena(cadena);
-                return new ResponseEntity<>(HttpStatus.CREATED);
+                return new ResponseEntity<>(cadena, HttpStatus.CREATED);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (NoSuchElementException e) {
