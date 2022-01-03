@@ -48,6 +48,9 @@ public class ControladorSucursal {
         private String email, contrasena, ciudad, calle;
         private int numero, cadenaID;
 
+        public RequestWrapperAgregarSucursal() {
+        }
+
         public RequestWrapperAgregarSucursal(String email, String contrasena, String ciudad, String calle, int numero, int cadenaID) {
             this.email = email;
             this.contrasena = contrasena;
