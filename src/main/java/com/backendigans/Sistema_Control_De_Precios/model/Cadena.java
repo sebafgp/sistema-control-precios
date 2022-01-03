@@ -57,4 +57,8 @@ public class Cadena {
     public void setSucursales(Set<Sucursal> sucursales){
         this.sucursales = sucursales;
     }
+
+    public boolean addSucursal(Sucursal sucursal){
+        return sucursales.add(sucursal);
+    }
 }
