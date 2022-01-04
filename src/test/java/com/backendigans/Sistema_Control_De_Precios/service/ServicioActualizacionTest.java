@@ -150,5 +150,52 @@ public class ServicioActualizacionTest {
 
     }
 
+    /* HU_13 */
+    @Test
+    @DisplayName("Top sucursales - Lista no vacia")
+    void siInvocoGetTopSucursalesPorInventariosConDatosValidosRetornaLista(){
+
+        // When
+        List<Sucursal> sucursalesFinales = cargarSucursalesFinalesHU13();
+        List<Inventario> inventarios = cargarInventariosHU13();
+        Actualizacion actualizacion = crearActualizacion();
+        actualizacion.setInventario(inventarios.get(0));
+
+        when(actualizacionRepository.findFirstByInventario_InventarioIDOrderByFechaActualizacionDesc(inventarios.get(0).getInventarioID())).thenReturn(Optional.of(actualizacion));
+        doThrow(NoSuchElementException.class).when(actualizacionRepository).findFirstByInventario_InventarioIDOrderByFechaActualizacionDesc(inventarios.get(1).getInventarioID());
+        doThrow(NoSuchElementException.class).when(actualizacionRepository).findFirstByInventario_InventarioIDOrderByFechaActualizacionDesc(inventarios.get(2).getInventarioID());
+        doThrow(NoSuchElementException.class).when(actualizacionRepository).findFirstByInventario_InventarioIDOrderByFechaActualizacionDesc(inventarios.get(3).getInventarioID());
+
+
+        // Act + Assert
+        assertTrue(() -> {
+            List<Sucursal> resultado = actualizacionService.getTopSucursalesPorInventarios(inventarios);
+            if(resultado.size() != sucursalesFinales.size()) return false;
+            for (int i = 0; i< resultado.size(); i++){
+                if(resultado.get(i).getCadena() != sucursalesFinales.get(i).getCadena()) return false;
+            }
+            return true;
+        });
+    }
+
+    @Test
+    @DisplayName("Top sucursales - Lista vacia")
+    void siInvocoGetTopSucursalesPorInventariosConDatosNoValidosRetornaListaVacia(){
+
+        // When
+        List<Sucursal> sucursalesFinales = new ArrayList<>();
+
+        List<Inventario> inventarios = new ArrayList<>();
+
+        // Act + Assert
+        assertTrue(() -> {
+            List<Sucursal> resultado = actualizacionService.getTopSucursalesPorInventarios(inventarios);
+            if(resultado.size() != sucursalesFinales.size()) return false;
+            for (int i = 0; i< resultado.size(); i++){
+                if(resultado.get(i).getCadena() != sucursalesFinales.get(i).getCadena()) return false;
+            }
+            return true;
+        });
+    }
 
 }

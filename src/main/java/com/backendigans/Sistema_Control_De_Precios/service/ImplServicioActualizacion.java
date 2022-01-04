@@ -59,7 +59,7 @@ public class ImplServicioActualizacion implements ServicioActualizacion{
         for(Inventario inventario : inventarios){
             try{
                 ultimasActualizaciones.add(encontrarUltimaPorInventario(inventario));
-            } catch (NoSuchElementException e){
+            } catch (Exception e){
                 ultimasActualizaciones.add(new Actualizacion(inventario.getProducto().getColaborador(), inventario, inventario.getPrecio()));
             }
         }
