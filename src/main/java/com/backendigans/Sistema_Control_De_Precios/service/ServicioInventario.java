@@ -2,6 +2,7 @@ package com.backendigans.Sistema_Control_De_Precios.service;
 
 import java.util.List;
 
+import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Inventario;
 import com.backendigans.Sistema_Control_De_Precios.model.Producto;
 import com.backendigans.Sistema_Control_De_Precios.model.Sucursal;
@@ -14,4 +15,6 @@ public interface ServicioInventario {
     void saveInventario(Inventario inventario);
 
     List<Inventario> getInventariosPorPrecio(Integer precio);
+
+    List<Inventario> getInventariosDeProducto(Producto producto);
 }

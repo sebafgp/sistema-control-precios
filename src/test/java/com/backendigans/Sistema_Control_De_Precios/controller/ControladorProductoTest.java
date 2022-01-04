@@ -247,5 +247,64 @@ public class ControladorProductoTest {
                 sucursalService.getSucursal(datos.getSucursalID()));
     }
 
+    /* HU_13 */
+    @Test
+    @DisplayName("Top Sucursales - datos validos")
+    void cuandoBuscoElTopSucursalesDeUnProductoEntregaUnaLista() throws Exception {
+        //Given
+        Producto producto = crearProducto();
+        List<Inventario> inventarios = cargarInventariosHU13();
+        List<Sucursal> sucursales = cargarSucursalesFinalesHU13();
+
+        given(productoService.getProducto(producto.getProductoID())).willReturn(producto);
+        given(inventarioService.getInventariosDeProducto(producto)).willReturn(inventarios);
+        given(actualizacionService.getTopSucursalesPorInventarios(inventarios)).willReturn(sucursales);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get("/productos/topSucursales/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Top Sucursales - datos no validos - producto")
+    void cuandoBuscoElTopSucursalesDeUnProductoNoValidoEntregaNotFound() throws Exception {
+        //Given
+
+        doThrow(NoSuchElementException.class).when(productoService).getProducto(0);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get("/productos/topSucursales/0")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Top Sucursales - datos no validos - inventarios no encontrados")
+    void cuandoBuscoElTopSucursalesDeUnProductoPeroNoTieneInventariosEntregaNotFound() throws Exception {
+        //Given
+        Producto producto = crearProducto();
+
+        given(productoService.getProducto(producto.getProductoID())).willReturn(producto);
+
+        // When
+        MockHttpServletResponse response = mockMvc.perform(get("/productos/topSucursales/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
+
 
 }

@@ -1,15 +1,10 @@
 package com.backendigans.Sistema_Control_De_Precios.service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import javax.transaction.Transactional;
 
-import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
-import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
-import com.backendigans.Sistema_Control_De_Precios.model.Inventario;
-import com.backendigans.Sistema_Control_De_Precios.model.Producto;
+import com.backendigans.Sistema_Control_De_Precios.model.*;
 import com.backendigans.Sistema_Control_De_Precios.repository.RepositorioActualizacion;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +51,29 @@ public class ImplServicioActualizacion implements ServicioActualizacion{
     @Override
     public boolean agregarComentario(String comentario, Actualizacion actualizacion) {
         return actualizacion.agregarComentario(comentario);
+    }
+
+    @Override
+    public List<Sucursal> getTopSucursalesPorInventarios(List<Inventario> inventarios) {
+        SortedSet<Actualizacion> ultimasActualizaciones = new TreeSet<>(Comparator.comparingInt(Actualizacion::getPrecio));
+        for(Inventario inventario : inventarios){
+            try{
+                ultimasActualizaciones.add(encontrarUltimaPorInventario(inventario));
+            } catch (Exception e){
+                ultimasActualizaciones.add(new Actualizacion(inventario.getProducto().getColaborador(), inventario, inventario.getPrecio()));
+            }
+        }
+
+        int x = Math.min(ultimasActualizaciones.size(), 3);
+
+        List<Actualizacion> listaActualizaciones = new ArrayList<>(ultimasActualizaciones);
+        List<Sucursal> sucursales = new ArrayList<>();
+
+        for (int i = 0; i < x; i++){
+            sucursales.add(listaActualizaciones.get(i).getInventario().getSucursal());
+        }
+
+        return sucursales;
     }
 
 }
