@@ -186,5 +186,21 @@ public class ControladorProducto {
         }
     }
 
+    @GetMapping("/topSucursales/{idProducto}")
+    public ResponseEntity<Object> getTopSucursalesMasBaratas(@PathVariable Integer idProducto){
+        try{
+            Producto producto = servicioProducto.getProducto(idProducto);
+            List<Inventario> inventarios = servicioInventario.getInventariosDeProducto(producto);
+            List<Sucursal> sucursales = servicioActualizacion.getTopSucursalesPorInventarios(inventarios);
+            if(!sucursales.isEmpty()){
+                return new ResponseEntity<>(sucursales, HttpStatus.OK);
+            }else{
+                throw new NoSuchElementException();
+            }
+        } catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 }
