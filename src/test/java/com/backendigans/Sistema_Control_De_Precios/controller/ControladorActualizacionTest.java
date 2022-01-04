@@ -48,7 +48,7 @@ import org.springframework.http.MediaType;
 //@MockitoSettings(strictness = Strictness.LENIENT)
 public class ControladorActualizacionTest {
 
-    private JacksonTester<List<String>> jsonString;
+    private JacksonTester<String> jsonString;
     private MockMvc mockMvc;
     @Mock
     private ServicioActualizacion actualizacionService;
@@ -68,9 +68,7 @@ public class ControladorActualizacionTest {
     void siAregoComentarioAActualizacionSeAgregaCorrectamente() throws Exception {
         // Given
         Actualizacion actualizacion = new Actualizacion();
-        List<String> x  = new ArrayList<>();
         String comentario = "Comentario de prueba";
-        x.add(comentario);
         given(actualizacionService.encontrarPorId(actualizacion.getActualizacionID())).willReturn(actualizacion);
         given(actualizacionService.agregarComentario(comentario, actualizacion)).willReturn(Boolean.TRUE);
 
@@ -79,7 +77,7 @@ public class ControladorActualizacionTest {
         // When
         MockHttpServletResponse response = mockMvc.perform(put(url)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonString.write(x).getJson())
+                        .content(comentario)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();
@@ -95,9 +93,7 @@ public class ControladorActualizacionTest {
     void siAregoComentarioAActualizacionNoExistenteLanzaNoSuchElementException() throws Exception {
         // Given
         Actualizacion actualizacion = new Actualizacion();
-        List<String> x  = new ArrayList<>();
         String comentario = "Comentario de prueba";
-        x.add(comentario);
         doThrow(NoSuchElementException.class).when(actualizacionService).encontrarPorId(0);
 
         String url = String.format("/actualizaciones/%d", actualizacion.getActualizacionID());
@@ -105,7 +101,7 @@ public class ControladorActualizacionTest {
         // When
         MockHttpServletResponse response = mockMvc.perform(put(url)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonString.write(x).getJson())
+                        .content(comentario)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();

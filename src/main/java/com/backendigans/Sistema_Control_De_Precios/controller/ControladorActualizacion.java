@@ -21,13 +21,12 @@ public class ControladorActualizacion {
     ServicioActualizacion servicioActualizacion;
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> agregarComentario(@RequestBody List<String> comentario, @PathVariable Integer id) {
-        String s = comentario.get(0);
+    public ResponseEntity<?> agregarComentario(@RequestBody String comentario, @PathVariable Integer id) {
         try {
             Actualizacion actualizacion = servicioActualizacion.encontrarPorId(id);
-            if(servicioActualizacion.agregarComentario(s, actualizacion)) {
+            if(servicioActualizacion.agregarComentario(comentario, actualizacion)) {
                 servicioActualizacion.saveActualizacion(actualizacion);
-                return new ResponseEntity<>(comentario, HttpStatus.OK);
+                return new ResponseEntity<>(actualizacion, HttpStatus.OK);
             } else
                 throw new NoSuchElementException();
         } catch (NoSuchElementException e) {

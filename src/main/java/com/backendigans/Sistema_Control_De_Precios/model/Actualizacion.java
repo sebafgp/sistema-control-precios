@@ -41,6 +41,7 @@ public class Actualizacion {
     private int precio;
 
     @ElementCollection(targetClass=String.class)
+    @JsonSerialize
     private List<String> comentarios = new ArrayList<>();
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
