@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.backendigans.Sistema_Control_De_Precios.model.Actualizacion;
 import com.backendigans.Sistema_Control_De_Precios.model.Colaborador;
 import com.backendigans.Sistema_Control_De_Precios.model.Inventario;
+import com.backendigans.Sistema_Control_De_Precios.model.Sucursal;
 
 public interface ServicioActualizacion {
 
@@ -22,4 +23,6 @@ public interface ServicioActualizacion {
     Actualizacion encontrarPorId(int actualizacionId);
 
     boolean agregarComentario(String comentario, Actualizacion actualizacion);
+
+    List<Sucursal> getTopSucursalesPorInventarios(List<Inventario> inventarios);
 }

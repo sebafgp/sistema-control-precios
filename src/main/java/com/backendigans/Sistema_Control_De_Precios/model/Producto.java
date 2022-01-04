@@ -97,4 +97,8 @@ public class Producto {
 	public boolean addInventario(Inventario inventario){
 		return inventarios.add(inventario);
 	}
+
+	public Colaborador getColaborador() {
+		return colaborador;
+	}
 }
