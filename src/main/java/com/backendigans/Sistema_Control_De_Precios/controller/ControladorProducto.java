@@ -191,6 +191,7 @@ public class ControladorProducto {
         try{
             Producto producto = servicioProducto.getProducto(idProducto);
             List<Inventario> inventarios = servicioInventario.getInventariosDeProducto(producto);
+            if(inventarios.isEmpty()) throw new NoSuchElementException();
             List<Sucursal> sucursales = servicioActualizacion.getTopSucursalesPorInventarios(inventarios);
             if(!sucursales.isEmpty()){
                 return new ResponseEntity<>(sucursales, HttpStatus.OK);
